@@ -406,7 +406,7 @@ escrito en el código, va en variables de entorno.</p>
 LLM_PROVIDER=groq
 LLM_BASE_URL=https://api.groq.com/openai/v1
 LLM_API_KEY=
-LLM_MODEL=llama-3.3-70b-versatile</code></pre>
+LLM_MODEL=openai/gpt-oss-20b</code></pre>
 <p>Ubuntu/macOS: <code>cp .env.example .env</code> — Windows (PowerShell): <code>copy .env.example .env</code></p>
 <p>Crea <code>backend/app/config.py</code>:</p>
 <pre class="python"><button class="copy-btn">Copiar</button><code class="python">import os
@@ -430,7 +430,7 @@ def get_settings() -&gt; Settings:
         llm_provider=os.getenv("LLM_PROVIDER", "groq"),
         llm_base_url=os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1"),
         llm_api_key=os.getenv("LLM_API_KEY", ""),
-        llm_model=os.getenv("LLM_MODEL", "llama-3.3-70b-versatile"),
+        llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),
     )</code></pre>
 <p>Nada se hardcodea: cambiar de proveedor en todo el taller va a ser cambiar
 4 líneas de <code>.env</code> y reiniciar <code>uvicorn</code> — nunca tocar código.</p>

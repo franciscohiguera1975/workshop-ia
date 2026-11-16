@@ -1,0 +1,70 @@
+{
+  "info": {
+    "name": "Workshop IA — Más allá del chat",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0 — Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "http://localhost:8000/health", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["health"] }
+      }
+    },
+    {
+      "name": "0 — Chat simple",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Hola, ¿qué puedes hacer?\",\n  \"history\": []\n}" },
+        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+      }
+    },
+    {
+      "name": "1 — Chat con Skill (resumen)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.\",\n  \"history\": []\n}" },
+        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+      }
+    },
+    {
+      "name": "2a — RAG: agregar documento",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Política de vacaciones\",\n  \"text\": \"Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años.\"\n}" },
+        "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+      }
+    },
+    {
+      "name": "2b — RAG: preguntar sobre el documento",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuántos días de vacaciones tengo al año?\",\n  \"history\": []\n}" },
+        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+      }
+    },
+    {
+      "name": "3 — Agente con herramienta (calculadora)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuánto es 123 * 47 + 8?\",\n  \"history\": []\n}" },
+        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+      }
+    },
+    {
+      "name": "4 — Agente + MCP (buscar documentos)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Busca en los documentos cuántos días de vacaciones hay\",\n  \"history\": []\n}" },
+        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+      }
+    }
+  ]
+}

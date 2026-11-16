@@ -411,7 +411,13 @@ se agrega exactamente igual: nombre, <code>LLM_BASE_URL</code>, <code>LLM_API_KE
 <li>Crea cuenta en https://console.groq.com</li>
 <li>Genera una API key en https://console.groq.com/keys</li>
 <li>Anota: <code>LLM_PROVIDER=groq</code>, <code>LLM_BASE_URL=https://api.groq.com/openai/v1</code>,
-<code>LLM_API_KEY=gsk_...</code>, <code>LLM_MODEL=llama-3.3-70b-versatile</code>.</li>
+<code>LLM_API_KEY=gsk_...</code>, <code>LLM_MODEL=openai/gpt-oss-20b</code>.
+&gt; Groq retira modelos del catálogo con cierta frecuencia (ya pasó con
+&gt; <code>llama-3.3-70b-versatile</code>, que dejó de estar disponible). Antes del
+&gt; evento, confirma que el modelo sigue vigente con:
+&gt; <code>curl https://api.groq.com/openai/v1/models -H "Authorization: Bearer $LLM_API_KEY"</code>
+&gt; — si ves un error 404 de “model does not exist”, repite ese <code>curl</code>
+&gt; para ver el catálogo actual y elige otro modelo de chat de la lista.</li>
 </ol>
 </section>
 <section class="level3" id="openrouter">
@@ -500,7 +506,7 @@ construyes en el Módulo 01.</p>
 </section>
 <section class="level2" id="postman-alternativa-a-curl">
 <h2>0.4 Postman (alternativa a curl)</h2>
-<p>Importa <a href="../docs/postman_collection.json"><code>../docs/postman_collection.json</code></a>
+<p>Importa <a download="" href="files/postman_collection.json"><code>../docs/postman_collection.json</code></a>
 en Postman. Trae una request lista por cada módulo del taller — úsala si
 prefieres probar cada endpoint ahí en vez de con <code>curl</code>.</p>
 </section>
