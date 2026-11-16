@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>00 · Bienvenida y Setup — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="current">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="">02 · Skills</a></li>
+<li><a href="03-rag.html" class="">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#módulo-00-bienvenida-y-setup">Módulo 00 — Bienvenida y Setup</a></li>
+<li><a href="#qué-vamos-a-construir">0.1 Qué vamos a construir</a></li>
+<li><a href="#elegir-proveedor-de-llm">0.2 Elegir proveedor de LLM</a></li>
+<li><a href="#descargar-y-preparar-el-frontend">0.3 Descargar y preparar el frontend</a></li>
+<li><a href="#postman-alternativa-a-curl">0.4 Postman (alternativa a curl)</a></li>
+<li><a href="#checklist-antes-de-seguir">Checklist antes de seguir</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="módulo-00-bienvenida-y-setup">
+<h2>Módulo 00 — Bienvenida y Setup</h2>
+<blockquote class="alert">
+<p><strong>Objetivo:</strong> tener listo lo que no se construye en el taller — el
+frontend (se descarga, no se programa) y la cuenta/credencial del
+proveedor de LLM que vas a usar. El backend se construye desde una
+carpeta vacía en el Módulo 01.</p>
+<p><strong>Herramientas:</strong> terminal, Python 3.10+, Node.js 18+, <code>curl</code> (o Postman).</p>
+<p><strong>Prerequisito:</strong> ninguno.</p>
+</blockquote>
+<hr/>
+</section>
+<section class="level2" id="qué-vamos-a-construir">
+<h2>0.1 Qué vamos a construir</h2>
+<p>Un backend en FastAPI que vas a crear <strong>desde cero</strong>, archivo por archivo,
+endpoint por endpoint, y que módulo a módulo gana:</p>
+<ol type="1">
+<li><strong>Skills</strong> — instrucciones especializadas que se activan solas.</li>
+<li><strong>RAG</strong> — respuestas basadas en documentos que tú cargas.</li>
+<li><strong>Agentes</strong> — el modelo ejecuta herramientas (calculadora, búsquedas).</li>
+<li><strong>MCP</strong> — esas herramientas pasan a venir de un servidor estándar.</li>
+</ol>
+<p>El frontend en React, en cambio, ya está terminado — lo descargas y lo
+corres tal cual, para <em>ver</em> funcionar cada bloque del backend que vas
+armando.</p>
+</section>
+<section class="level2" id="elegir-proveedor-de-llm">
+<h2>0.2 Elegir proveedor de LLM</h2>
+<p>Todo el taller habla con el modelo por una API <strong>compatible con OpenAI</strong>
+(<code>/chat/completions</code>). Por eso el backend nunca cambia de código al cambiar
+de proveedor — solo cambian 4 líneas en <code>.env</code>. Elige una opción ahora y
+ten la credencial a mano (o el servidor local corriendo):</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+<col style="width: 33%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Cuándo usarla</th>
+<th>Costo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Groq</strong></td>
+<td>La más simple para el taller: rápida, sin tarjeta, soporta <em>tool calling</em> (necesario en el Módulo 04)</td>
+<td>Gratis (límites de uso)</td>
+</tr>
+<tr>
+<td><strong>OpenRouter</strong></td>
+<td>Un solo registro, acceso a decenas de modelos gratuitos (<code>:free</code>) desde una sola API key</td>
+<td>Gratis (modelos <code>:free</code>, límites de uso)</td>
+</tr>
+<tr>
+<td><strong>Google AI Studio (Gemini)</strong></td>
+<td>Registro más simple de todos (solo cuenta de Google), buena cuota gratis</td>
+<td>Gratis (límites de uso)</td>
+</tr>
+<tr>
+<td><strong>ChatGPT API (OpenAI)</strong></td>
+<td>Si ya tienes una cuenta/clave de OpenAI</td>
+<td>De pago (sin capa gratuita permanente)</td>
+</tr>
+<tr>
+<td><strong>vLLM local</strong></td>
+<td>Si tienes GPU propia y quieres correr el modelo tú mismo, sin depender de internet</td>
+<td>Gratis, pero requiere GPU</td>
+</tr>
+</tbody>
+</table></div>
+<p>Las cinco funcionan <strong>sin tocar código</strong>: <code>get_llm_client()</code> (Módulo 01)
+no distingue por nombre de proveedor, solo arma el cliente con
+<code>LLM_BASE_URL</code> + <code>LLM_API_KEY</code> + <code>LLM_MODEL</code> — por eso agregar una opción
+nueva es siempre copiar y pegar el mismo patrón de abajo.</p>
+<blockquote class="alert">
+<p><strong>GitHub Models fue retirado por GitHub el 30 de julio de 2026</strong> — ya no
+es una opción. Si en el futuro aparece otro proveedor con capa gratuita y
+API compatible con OpenAI (Mistral, Google AI Studio, Cerebras, etc.),
+se agrega exactamente igual: nombre, <code>LLM_BASE_URL</code>, <code>LLM_API_KEY</code>,
+<code>LLM_MODEL</code> — el código del Módulo 01 no cambia.</p>
+</blockquote>
+<section class="level3" id="groq">
+<h3>Groq</h3>
+<ol type="1">
+<li>Crea cuenta en https://console.groq.com</li>
+<li>Genera una API key en https://console.groq.com/keys</li>
+<li>Anota: <code>LLM_PROVIDER=groq</code>, <code>LLM_BASE_URL=https://api.groq.com/openai/v1</code>,
+<code>LLM_API_KEY=gsk_...</code>, <code>LLM_MODEL=llama-3.3-70b-versatile</code>.</li>
+</ol>
+</section>
+<section class="level3" id="openrouter">
+<h3>OpenRouter</h3>
+<ol type="1">
+<li>Entra a https://openrouter.ai y crea cuenta (con email o GitHub, sin
+tarjeta).</li>
+<li>Ve a https://openrouter.ai/keys → <strong>Create Key</strong> → ponle un nombre →
+copia la key (empieza con <code>sk-or-...</code>, solo se muestra una vez).</li>
+<li>Elige un modelo gratuito: entra a
+https://openrouter.ai/models?max_price=0&amp;supported_parameters=tools
+(filtra automáticamente los que son gratis <strong>y</strong> soportan <em>tool
+calling</em>, necesario para el Módulo 04) y copia su id exacto — por
+ejemplo <code>nvidia/nemotron-3.5-super-vl:free</code>.
+&gt; El catálogo de modelos gratuitos cambia seguido — verifica esa
+&gt; página antes del evento en vez de confiar en un nombre fijo.</li>
+<li>Anota: <code>LLM_PROVIDER=openrouter</code>,
+<code>LLM_BASE_URL=https://openrouter.ai/api/v1</code>, <code>LLM_API_KEY=sk-or-...</code>,
+<code>LLM_MODEL=&lt;el id que copiaste, con el sufijo :free&gt;</code>.</li>
+</ol>
+</section>
+<section class="level3" id="google-ai-studio-gemini">
+<h3>Google AI Studio (Gemini)</h3>
+<ol type="1">
+<li>Entra a https://aistudio.google.com/apikey con tu cuenta de Google
+(sin tarjeta).</li>
+<li>Clic en <strong>Create API key</strong> → <strong>Create API key in new project</strong> (o uno
+existente) → copia la key.</li>
+<li>Anota: <code>LLM_PROVIDER=google</code>,
+<code>LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/</code>,
+<code>LLM_API_KEY=&lt;tu key&gt;</code>, <code>LLM_MODEL=gemini-3.5-flash-lite</code> (o el modelo
+Flash gratuito vigente — revisa https://ai.google.dev/gemini-api/docs/pricing
+antes del evento).</li>
+</ol>
+</section>
+<section class="level3" id="chatgpt-api-openai">
+<h3>ChatGPT API (OpenAI)</h3>
+<ol type="1">
+<li>Genera una API key en https://platform.openai.com/api-keys</li>
+<li>Anota: <code>LLM_PROVIDER=openai</code>, <code>LLM_BASE_URL=https://api.openai.com/v1</code>,
+<code>LLM_API_KEY=sk-...</code>, <code>LLM_MODEL=gpt-4o-mini</code>.</li>
+</ol>
+</section>
+<section class="level3" id="vllm-local-opcional-requiere-gpu">
+<h3>vLLM local (opcional, requiere GPU)</h3>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install vllm
+vllm serve Qwen/Qwen2.5-7B-Instruct --port 8001 --enable-auto-tool-choice --tool-call-parser hermes</code></pre>
+<p><code>--enable-auto-tool-choice</code> hace falta recién en el Módulo 04 (Agentes).
+Anota: <code>LLM_PROVIDER=vllm</code>, <code>LLM_BASE_URL=http://localhost:8001/v1</code>,
+<code>LLM_API_KEY=EMPTY</code>, <code>LLM_MODEL=Qwen/Qwen2.5-7B-Instruct</code>.</p>
+</section>
+<section class="level3" id="otro-proveedor-compatible-con-openai">
+<h3>Otro proveedor compatible con OpenAI</h3>
+<p>Cualquiera que exponga <code>/chat/completions</code> igual que OpenAI sirve sin
+cambiar código — solo repite el patrón de arriba con su propio
+<code>LLM_BASE_URL</code>/<code>LLM_API_KEY</code>/<code>LLM_MODEL</code>. Otro candidato con capa gratuita
+al momento de escribir esto: Mistral. Verifica límites y vigencia antes
+del evento — estas ofertas cambian seguido.</p>
+</section>
+</section>
+<section class="level2" id="descargar-y-preparar-el-frontend">
+<h2>0.3 Descargar y preparar el frontend</h2>
+<p>El frontend no se programa en el taller — se instala una vez y queda
+corriendo de fondo para que, desde el Módulo 01 en adelante, veas cada
+endpoint nuevo funcionando en una interfaz de chat real.</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd frontend
+npm install
+cp .env.example .env     # VITE_API_URL=http://localhost:8000
+npm run dev               # http://localhost:5173</code></pre>
+<p>Si lo abres ahora en http://localhost:5173 verás la interfaz, pero los
+mensajes van a fallar — es normal, el backend todavía no existe. Lo
+construyes en el Módulo 01.</p>
+</section>
+<section class="level2" id="postman-alternativa-a-curl">
+<h2>0.4 Postman (alternativa a curl)</h2>
+<p>Importa <a href="../docs/postman_collection.json"><code>../docs/postman_collection.json</code></a>
+en Postman. Trae una request lista por cada módulo del taller — úsala si
+prefieres probar cada endpoint ahí en vez de con <code>curl</code>.</p>
+</section>
+<section class="level2" id="checklist-antes-de-seguir">
+<h2>Checklist antes de seguir</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"/><code>python3 --version</code> ≥ 3.10 y <code>node --version</code> ≥ 18.</label></li>
+<li><label><input type="checkbox"/>Elegiste proveedor de LLM (Groq, ChatGPT API o vLLM local) y tienes la API key a mano, o el servidor local corriendo.</label></li>
+<li><label><input type="checkbox"/><code>npm install</code> del frontend terminó sin errores.</label></li>
+<li><label><input type="checkbox"/>(Opcional) importaste la colección de Postman.</label></li>
+</ul>
+<p>Siguiente: <a href="01-chat-simple.html">01-chat-simple.md</a> — aquí arranca el backend, desde una carpeta vacía.</p>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>

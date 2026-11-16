@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>02 · Skills — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="current">02 · Skills</a></li>
+<li><a href="03-rag.html" class="">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#módulo-02-skills">Módulo 02 — Skills</a></li>
+<li><a href="#qué-es-una-skill-en-este-taller">2.1 Qué es una Skill (en este taller)</a></li>
+<li><a href="#crea-backendappskills.py">2.2 Crea backend/app/skills.py</a></li>
+<li><a href="#conecta-la-skill-en-backendapprouterschat.py">2.3 Conecta la Skill en backend/app/routers/chat.py</a></li>
+<li><a href="#pruébalo">2.4 Pruébalo</a></li>
+<li><a href="#ejercicio-1-crea-tu-propia-skill-10-min">2.5 Ejercicio 1 — crea tu propia Skill (10 min)</a></li>
+<li><a href="#ejercicio-2-qué-pasa-cuando-dos-skills-compiten-10-min">2.6 Ejercicio 2 — qué pasa cuando dos Skills compiten (10 min)</a></li>
+<li><a href="#checklist-antes-de-seguir">Checklist antes de seguir</a></li>
+<li><a href="#bonus-opcional-fuera-del-backend-tu-skill-pero-de-verdad-en-claude">Bonus (opcional, fuera del backend) — tu Skill, pero de verdad en Claude</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="módulo-02-skills">
+<h2>Módulo 02 — Skills</h2>
+<blockquote class="alert">
+<p><strong>Objetivo:</strong> que el backend elija automáticamente <em>qué instrucciones
+especializadas</em> darle al modelo según lo que pida el usuario, en vez de
+usar siempre el mismo prompt genérico.</p>
+<p><strong>Herramientas:</strong> nada nuevo — solo Python estándar.</p>
+<p><strong>Prerequisito:</strong> Módulo 01.</p>
+</blockquote>
+<hr/>
+</section>
+<section class="level2" id="qué-es-una-skill-en-este-taller">
+<h2>2.1 Qué es una Skill (en este taller)</h2>
+<p>Una Skill es, en su forma más simple: <strong>una condición + un bloque de
+instrucciones</strong>. Si el mensaje del usuario “activa” la condición, esas
+instrucciones se insertan como mensaje <code>system</code> antes de llamar al modelo.
+No hay magia ni infraestructura nueva — es composición de prompts.</p>
+<p>(En producción, una Skill real suele incluir también archivos de referencia
+y scripts que el modelo puede ejecutar — aquí nos quedamos con la parte
+conceptual: instrucciones que se cargan <em>condicionalmente</em>.)</p>
+</section>
+<section class="level2" id="crea-backendappskills.py">
+<h2>2.2 Crea <code>backend/app/skills.py</code></h2>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">SKILLS = [
+    {
+        "name": "resumen",
+        "keywords": ["resume", "resumir", "resumen"],
+        "instructions": (
+            "Actúa como un asistente de resúmenes. Responde en máximo 3 "
+            "viñetas, en español, sin agregar opiniones ni información que "
+            "no esté en el texto del usuario."
+        ),
+    },
+    {
+        "name": "traductor",
+        "keywords": ["traduce", "traducir", "traducción", "to english", "al inglés"],
+        "instructions": (
+            "Actúa como traductor. Traduce el mensaje del usuario al idioma "
+            "que pida (o a inglés si no especifica) y responde SOLO con la "
+            "traducción, sin explicaciones adicionales."
+        ),
+    },
+    {
+        "name": "code-review",
+        "keywords": ["revisa este código", "code review", "revisar código", "bug en mi código"],
+        "instructions": (
+            "Actúa como revisor de código senior. Señala errores y riesgos "
+            "de seguridad, y propone una mejora concreta. Responde en "
+            "formato de lista."
+        ),
+    },
+]
+
+
+def select_skill(message: str) -&gt; dict | None:
+    lowered = message.lower()
+    for skill in SKILLS:
+        if any(keyword in lowered for keyword in skill["keywords"]):
+            return skill
+    return None</code></pre>
+</section>
+<section class="level2" id="conecta-la-skill-en-backendapprouterschat.py">
+<h2>2.3 Conecta la Skill en <code>backend/app/routers/chat.py</code></h2>
+<p>Reemplaza el cuerpo de la función <code>chat</code> por:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from ..skills import select_skill
+
+@router.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest) -&gt; ChatResponse:
+    client = get_llm_client()
+
+    messages = [{"role": m.role, "content": m.content} for m in request.history]
+
+    skill = select_skill(request.message)
+    skill_used = None
+    if skill:
+        messages.insert(0, {"role": "system", "content": skill["instructions"]})
+        skill_used = SkillUsed(
+            name=skill["name"],
+            reason=f'Se detectaron las palabras clave de "{skill["name"]}" en tu mensaje.',
+        )
+
+    messages.append({"role": "user", "content": request.message})
+    reply = client.chat(messages)
+
+    return ChatResponse(reply=reply, skill_used=skill_used)</code></pre>
+</section>
+<section class="level2" id="pruébalo">
+<h2>2.4 Pruébalo</h2>
+<p>Sin disparar ninguna skill (debe dar <code>skill_used: null</code>):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Qué día es hoy?", "history": []}' | python3 -m json.tool</code></pre>
+<p>Disparando la skill de resumen:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Deberías ver <code>"skill_used": {"name": "resumen", "reason": "..."}</code>.</p>
+<section class="level3" id="pruébalo-también-en-el-frontend">
+<h3>Pruébalo también en el frontend</h3>
+<ol type="1">
+<li>Abre <a href="http://localhost:5173">http://localhost:5173</a> (si no lo tienes
+abierto, <code>cd frontend &amp;&amp; npm run dev</code>).</li>
+<li>Escribe el mismo mensaje del resumen de arriba: <code>Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.</code></li>
+<li>Debajo de la respuesta del asistente debe aparecer un enlace <strong>“Ver
+proceso”</strong> — haz clic para expandirlo.</li>
+<li>Dentro debe verse <strong>“Skill activada: resumen”</strong> con el motivo
+detectado — sin que hayamos tocado una sola línea de React.</li>
+<li>Prueba también un mensaje que <strong>no</strong> dispare ninguna skill (por
+ejemplo <code>¿Qué día es hoy?</code>) y confirma que ahí <strong>no</strong> aparece el enlace
+“Ver proceso” (no hay nada que mostrar).</li>
+</ol>
+</section>
+</section>
+<section class="level2" id="ejercicio-1-crea-tu-propia-skill-10-min">
+<h2>2.5 Ejercicio 1 — crea tu propia Skill (10 min)</h2>
+<p>Agrega tu propia Skill a la lista <code>SKILLS</code> (por ejemplo, “explicar como si
+tuviera 5 años”, o una para tu dominio: salud, legal, educación). Prueba que
+se active con las palabras clave que elegiste.</p>
+</section>
+<section class="level2" id="ejercicio-2-qué-pasa-cuando-dos-skills-compiten-10-min">
+<h2>2.6 Ejercicio 2 — qué pasa cuando dos Skills compiten (10 min)</h2>
+<p><code>select_skill</code> recorre <code>SKILLS</code> en orden y devuelve la <strong>primera</strong> que
+matchea — no la “mejor”, la primera. Esto tiene consecuencias reales.</p>
+<p>Agrega una Skill nueva cuyas palabras clave se <strong>superpongan</strong> con una que
+ya tengas (por ejemplo, si tu Skill del Ejercicio 1 dispara con “explica”,
+agrega esta <em>antes</em> en la lista):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">{
+    "name": "explicacion-tecnica",
+    "keywords": ["explica", "explicar"],
+    "instructions": "Explica con jerga técnica, asumiendo nivel experto.",
+},</code></pre>
+<p>Manda un mensaje que dispare ambas (“Explícame qué es Skills”) y observa
+cuál gana — la que está <strong>primero en la lista</strong>, sin importar cuál
+describe mejor la intención del usuario.</p>
+<p>Ahora cambia el orden de las dos Skills en <code>SKILLS</code> y repite la prueba:
+el resultado cambia, aunque el mensaje del usuario sea idéntico.</p>
+<blockquote class="alert">
+<p>Esto no es un bug — es la limitación real de un router por palabras
+clave: <strong>el orden importa</strong>, y dos intenciones parecidas pueden
+pisarse. En un sistema de producción esto se resuelve con un router más
+sofisticado (por ejemplo, pidiéndole al propio LLM que clasifique la
+intención antes de elegir la Skill) — fuera del alcance de este taller,
+pero vale la pena que lo sepas antes de usar este patrón en serio.</p>
+</blockquote>
+</section>
+<section class="level2" id="checklist-antes-de-seguir">
+<h2>Checklist antes de seguir</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"/><code>select_skill</code> detecta al menos 2 skills distintas en tus pruebas.</label></li>
+<li><label><input type="checkbox"/>El frontend muestra “Ver proceso” → “Skill activada” cuando corresponde.</label></li>
+<li><label><input type="checkbox"/>Agregaste tu propia Skill.</label></li>
+<li><label><input type="checkbox"/>Viste cómo el orden de <code>SKILLS</code> decide cuál gana cuando dos palabras clave se superponen.</label></li>
+</ul>
+<hr/>
+</section>
+<section class="level2" id="bonus-opcional-fuera-del-backend-tu-skill-pero-de-verdad-en-claude">
+<h2>Bonus (opcional, fuera del backend) — tu Skill, pero de verdad en Claude</h2>
+<p>Todo lo de este módulo es una versión de juguete, hecha a mano, de algo
+que ya existe en producción: los <strong>Agent Skills</strong> de Claude (el mismo
+Claude con el que puede que estés armando este backend). La idea es
+idéntica — “instrucciones especializadas que se activan según la
+intención” — pero en vez de un <code>if keyword in mensaje</code> que programaste
+tú, es el propio modelo el que lee la <code>description</code> de cada Skill
+disponible y decide cuál usar.</p>
+<section class="level3" id="la-estructura-de-un-skill-real">
+<h3>La estructura de un Skill real</h3>
+<pre><button class="copy-btn">Copiar</button><code>resumen-taller/
+  SKILL.md</code></pre>
+<p><code>SKILL.md</code> lleva un encabezado YAML con dos campos obligatorios y el
+cuerpo en Markdown con las instrucciones:</p>
+<pre class="markdown"><button class="copy-btn">Copiar</button><code class="markdown">---
+name: resumen-taller
+description: Resume el texto que te dé el usuario en máximo 3 viñetas, en español, sin agregar opiniones ni datos que no estén en el original. Úsala cuando el usuario pida resumir un texto.
+---
+
+# Instrucciones
+
+Cuando el usuario pida un resumen:
+1. Responde en máximo 3 viñetas.
+2. En español.
+3. No agregues opiniones ni información que no esté en el texto original.</code></pre>
+<p>Dos reglas no-negociables: <code>name</code> tiene que ser igual al nombre de la
+carpeta (minúsculas, guiones, sin espacios), y <code>description</code> tiene que
+decir <strong>qué hace</strong> la Skill <strong>y cuándo usarla</strong> — es el único texto que
+Claude lee para decidir si la activa, así que si es vago, no se activa
+nunca o se activa siempre.</p>
+</section>
+<section class="level3" id="cómo-agregarla">
+<h3>Cómo agregarla</h3>
+<ol type="1">
+<li>Comprime la carpeta <code>resumen-taller/</code> en un <code>.zip</code> (la carpeta tiene
+que quedar como raíz del zip, no los archivos sueltos).</li>
+<li>En Claude: <strong>Configuración → Skills → + Añadir</strong> → sube el <code>.zip</code> →
+actívala.</li>
+<li>Pruébala pidiéndole a Claude que resuma algo, en una conversación
+nueva.</li>
+</ol>
+<p>Alternativa sin escribir el YAML a mano: la Skill <code>skill-creator</code> (viene
+de Anthropic, aparece en tu lista de Skills) te guía conversacionalmente
+para crear una nueva — le describes qué quieres que haga y arma el
+<code>SKILL.md</code> por ti.</p>
+<blockquote class="alert">
+<p>La diferencia de fondo con tu <code>select_skill()</code>: tu versión decide por
+coincidencia literal de palabras (frágil, como viste en el Ejercicio
+2); un Skill real de Claude decide por comprensión del lenguaje de la
+<code>description</code> — más robusto, pero también por eso la <code>description</code>
+importa tanto: es, literalmente, el prompt del router.</p>
+</blockquote>
+</section>
+<section class="level3" id="lo-mismo-pero-en-chatgpt">
+<h3>Lo mismo, pero en ChatGPT</h3>
+<p><strong>Aviso importante:</strong> ChatGPT no tiene un formato de Skill empaquetado
+(carpeta + <code>SKILL.md</code> + <code>.zip</code>) como Claude. El equivalente más cercano es
+un <strong>GPT personalizado</strong> (“Custom GPT”, creado con el <em>GPT Builder</em>) — no
+es una Skill que se “activa” dentro de una conversación normal según su
+descripción, sino un asistente aparte, con sus propias instrucciones fijas,
+al que entras directamente desde “Explorar GPTs”. Es la misma idea de
+fondo (“instrucciones especializadas reutilizables”), pero la mecánica de
+activación es distinta: aquí el usuario <strong>elige entrar</strong> a ese GPT, el
+modelo no decide activarlo por el contenido del mensaje.</p>
+<ol type="1">
+<li>En ChatGPT: <strong>Explorar GPTs → + Crear</strong>.</li>
+<li>En la pestaña <strong>Configurar</strong> (no la de chat conversacional), completa:
+<ul>
+<li><strong>Name</strong>: nombre corto, igual que el <code>name</code> del <code>SKILL.md</code>.</li>
+<li><strong>Description</strong>: una frase de qué hace — aparece en el listado de
+GPTs, es lo primero que lee quien decide usarlo.</li>
+<li><strong>Instructions</strong>: aquí va el equivalente al cuerpo del <code>SKILL.md</code> —
+las instrucciones completas de cómo debe comportarse (por ejemplo,
+las mismas 3 reglas de tu Skill de resumen: máximo 3 viñetas, en
+español, sin opiniones).</li>
+</ul></li>
+<li>(Opcional) <strong>Knowledge</strong>: sube archivos de referencia (igual que una
+Skill real de Claude puede traer archivos junto al <code>SKILL.md</code>) para que
+el GPT los consulte.</li>
+<li>(Opcional) <strong>Actions</strong>: si quisieras que este GPT ejecute herramientas
+reales (lo que verás en los Módulos 04-05), se definen aquí con un
+esquema OpenAPI — fuera del alcance de este bonus.</li>
+<li>Guarda y pruébalo en una conversación nueva con ese GPT.</li>
+</ol>
+<blockquote class="alert">
+<p>Si lo que quieres es que el comportamiento se active <strong>automáticamente
+según la intención del mensaje</strong>, dentro de tu ChatGPT normal (más
+parecido a como funciona una Skill de Claude), la opción más cercana en
+ChatGPT son las <strong>Custom Instructions</strong> de la cuenta (aplican siempre, a
+todas las conversaciones) — no hay, al momento de este taller, un
+mecanismo de “varias Skills, cada una con su propia descripción, que el
+modelo elige según el mensaje” equivalente al de Claude.</p>
+</blockquote>
+<p>Siguiente: <a href="03-rag.html">03-rag.md</a></p>
+</section>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>

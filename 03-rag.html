@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>03 · RAG — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="">02 · Skills</a></li>
+<li><a href="03-rag.html" class="current">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#módulo-03-rag-retrieval-augmented-generation">Módulo 03 — RAG (Retrieval-Augmented Generation)</a></li>
+<li><a href="#la-idea-en-3-pasos">3.1 La idea en 3 pasos</a></li>
+<li><a href="#instala-lancedb">3.2 Instala LanceDB</a></li>
+<li><a href="#configura-el-proveedor-de-embeddings">3.3 Configura el proveedor de embeddings</a></li>
+<li><a href="#el-adaptador-de-embeddings-backendappembeddings.py">3.4 El adaptador de embeddings: backend/app/embeddings.py</a></li>
+<li><a href="#la-base-vectorial-backendapprag.py">3.5 La base vectorial: backend/app/rag.py</a></li>
+<li><a href="#agrega-los-endpoints-en-backendapprouterschat.py">3.6 Agrega los endpoints en backend/app/routers/chat.py</a></li>
+<li><a href="#usa-rag-dentro-de-chat">3.7 Usa RAG dentro de /chat</a></li>
+<li><a href="#pruébalo">3.8 Pruébalo</a></li>
+<li><a href="#ejercicio-1-varios-documentos-en-competencia-10-min">3.9 Ejercicio 1 — varios documentos en competencia (10 min)</a></li>
+<li><a href="#ejercicio-2-por-qué-el-chunking-importa-15-min">3.10 Ejercicio 2 — por qué el chunking importa (15 min)</a></li>
+<li><a href="#checklist-antes-de-seguir">Checklist antes de seguir</a></li>
+<li><a href="#bonus-opcional-carga-un-documento-real-y-mira-los-vectores">Bonus (opcional) — carga un documento real y mira los vectores</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="módulo-03-rag-retrieval-augmented-generation">
+<h2>Módulo 03 — RAG (Retrieval-Augmented Generation)</h2>
+<blockquote class="alert">
+<p><strong>Objetivo:</strong> que el modelo responda usando documentos que tú le diste,
+no solo lo que aprendió en su entrenamiento — usando una base de datos
+vectorial real, no una simulación hecha a mano.</p>
+<p><strong>Herramientas:</strong> <a href="https://lancedb.github.io/lancedb/">LanceDB</a> (motor
+vectorial embebido — sin servidor que levantar) + el SDK <code>openai</code> para
+los embeddings (mismo patrón que ya usas para el chat).</p>
+<p><strong>Prerequisito:</strong> Módulo 02.</p>
+</blockquote>
+<hr/>
+</section>
+<section class="level2" id="la-idea-en-3-pasos">
+<h2>3.1 La idea en 3 pasos</h2>
+<ol type="1">
+<li>Guardas documentos (texto plano) en una base de datos vectorial.</li>
+<li>Cuando llega una pregunta, le pides a la base que busque los documentos
+<strong>semánticamente</strong> más parecidos (<strong>retrieval</strong>) — esto requiere
+convertir texto a vectores (<strong>embeddings</strong>), no solo contar palabras.</li>
+<li>Metes esos fragmentos en el prompt antes de preguntarle al modelo
+(<strong>augmented generation</strong>).</li>
+</ol>
+<p>Usamos <strong>LanceDB</strong> porque es embebido (como SQLite, pero para vectores: un
+archivo en disco, sin proceso servidor) y porque trae soporte nativo para
+calcular embeddings él mismo — nuestro código no llama a ningún SDK de
+embeddings a mano, solo configura <em>con qué</em> calcularlos. Es, además, la
+misma base vectorial que usa un proyecto real construido con este patrón
+(Groq/OpenAI/vLLM para el modelo, LanceDB para el almacenamiento).</p>
+</section>
+<section class="level2" id="instala-lancedb">
+<h2>3.2 Instala LanceDB</h2>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install lancedb
+echo "lancedb" &gt;&gt; requirements.txt</code></pre>
+</section>
+<section class="level2" id="configura-el-proveedor-de-embeddings">
+<h2>3.3 Configura el proveedor de embeddings</h2>
+<p>Igual que con <code>LLM_PROVIDER</code>, el <em>de dónde salen los embeddings</em> es
+configuración, no código. Agrega a <code>backend/.env.example</code> (y a tu <code>.env</code>):</p>
+<pre><button class="copy-btn">Copiar</button><code># Elegir proveedor de embeddings: openai | vllm
+# (Groq no ofrece un endpoint de embeddings — no es una opción aquí)
+EMBEDDING_PROVIDER=openai
+EMBEDDING_BASE_URL=https://api.openai.com/v1
+EMBEDDING_API_KEY=
+EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIM=1536
+
+# --- vLLM local: necesitas un SEGUNDO servidor sirviendo un modelo de
+# embeddings (puerto distinto al del chat) ---
+# EMBEDDING_PROVIDER=vllm
+# EMBEDDING_BASE_URL=http://localhost:8002/v1
+# EMBEDDING_API_KEY=EMPTY
+# EMBEDDING_MODEL=BAAI/bge-m3
+# EMBEDDING_DIM=1024</code></pre>
+<blockquote class="alert">
+<p>Si en el Módulo 00 elegiste <strong>Groq</strong> o <strong>vLLM</strong> para el chat, necesitas
+igual una clave de OpenAI solo para este endpoint de embeddings (Groq no
+los ofrece). Alternativas dedicadas a embeddings con capa gratuita:
+Voyage AI (mejor calidad, pero el registro pasa por una cuenta de
+MongoDB Atlas) o Jina AI (registro directo, cuota más chica) — ambas
+requieren su propia clase de embeddings en <code>lancedb.embeddings</code>, distinta
+a la de abajo; no se cubren en este módulo por tiempo.</p>
+</blockquote>
+<p>Amplía <code>backend/app/config.py</code> (agrega los campos nuevos a <code>Settings</code> y a
+<code>get_settings</code>):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">@dataclass
+class Settings:
+    llm_provider: str
+    llm_base_url: str
+    llm_api_key: str
+    llm_model: str
+    embedding_provider: str
+    embedding_base_url: str
+    embedding_api_key: str
+    embedding_model: str
+    embedding_dim: int
+
+
+def get_settings() -&gt; Settings:
+    return Settings(
+        llm_provider=os.getenv("LLM_PROVIDER", "groq"),
+        llm_base_url=os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1"),
+        llm_api_key=os.getenv("LLM_API_KEY", ""),
+        llm_model=os.getenv("LLM_MODEL", "llama-3.3-70b-versatile"),
+        embedding_provider=os.getenv("EMBEDDING_PROVIDER", "openai"),
+        embedding_base_url=os.getenv("EMBEDDING_BASE_URL", "https://api.openai.com/v1"),
+        embedding_api_key=os.getenv("EMBEDDING_API_KEY", ""),
+        embedding_model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
+        embedding_dim=int(os.getenv("EMBEDDING_DIM", "1536")),
+    )</code></pre>
+</section>
+<section class="level2" id="el-adaptador-de-embeddings-backendappembeddings.py">
+<h2>3.4 El adaptador de embeddings: <code>backend/app/embeddings.py</code></h2>
+<p>Esta es la única pieza “manual”: una función de embeddings que LanceDB va
+a usar automáticamente. Llama a cualquier endpoint compatible con OpenAI
+— igual que <code>llm_client.py</code>, pero para <code>/embeddings</code> en vez de
+<code>/chat/completions</code> — por eso sirve tanto para OpenAI como para un modelo
+de embeddings servido con vLLM.</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from typing import List, Union
+
+from lancedb.embeddings import TextEmbeddingFunction, register
+from lancedb.embeddings.registry import get_registry
+
+
+@register("openai_compatible_embeddings")
+class OpenAICompatibleEmbeddings(TextEmbeddingFunction):
+    """Embeddings reales vía cualquier endpoint compatible con OpenAI
+    (la API de OpenAI, o vLLM sirviendo un modelo de embeddings)."""
+
+    name: str
+    base_url: str
+    api_key: str
+    dim: int = 1536
+
+    def ndims(self) -&gt; int:
+        return self.dim
+
+    def generate_embeddings(self, texts: Union[List[str], "np.ndarray"]) -&gt; List[list]:
+        from openai import OpenAI
+
+        client = OpenAI(base_url=self.base_url, api_key=self.api_key)
+        response = client.embeddings.create(model=self.name, input=list(texts))
+        return [d.embedding for d in response.data]
+
+
+def get_embedding_function():
+    from .config import get_settings
+
+    settings = get_settings()
+    registry = get_registry()
+
+    return registry.get("openai_compatible_embeddings").create(
+        name=settings.embedding_model,
+        base_url=settings.embedding_base_url,
+        api_key=settings.embedding_api_key,
+        dim=settings.embedding_dim,
+    )</code></pre>
+</section>
+<section class="level2" id="la-base-vectorial-backendapprag.py">
+<h2>3.5 La base vectorial: <code>backend/app/rag.py</code></h2>
+<p>Aquí está la parte importante: <strong>no hay ningún código nuestro que calcule
+un vector</strong>. Definimos un esquema (<code>Document</code>) donde <code>text</code> es el campo
+fuente y <code>vector</code> se calcula solo; <code>add()</code> y <code>search()</code> reciben texto
+plano y LanceDB hace el resto.</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import lancedb
+from lancedb.pydantic import LanceModel, Vector
+
+from .embeddings import get_embedding_function
+
+_embedding_fn = get_embedding_function()
+
+
+class Document(LanceModel):
+    title: str
+    text: str = _embedding_fn.SourceField()
+    vector: Vector(_embedding_fn.ndims()) = _embedding_fn.VectorField()
+
+
+_db = lancedb.connect("./storage/lancedb")
+_table = _db.create_table("documents", schema=Document, exist_ok=True)
+
+
+def add_document(title: str, text: str) -&gt; None:
+    _table.add([{"title": title, "text": text}])
+
+
+def list_documents() -&gt; list[dict]:
+    return [{"title": r["title"], "text": r["text"]} for r in _table.to_arrow().to_pylist()]
+
+
+def search(query: str, top_k: int = 2) -&gt; list[dict]:
+    if _table.count_rows() == 0:
+        return []
+    results = _table.search(query).limit(top_k).to_list()
+    return [
+        {"title": r["title"], "text": r["text"], "score": round(1 / (1 + r["_distance"]), 3)}
+        for r in results
+    ]</code></pre>
+<p><code>./storage/lancedb</code> es una carpeta (no un servidor): ahí quedan los
+archivos de la base vectorial, igual que un archivo <code>.sqlite</code>.</p>
+</section>
+<section class="level2" id="agrega-los-endpoints-en-backendapprouterschat.py">
+<h2>3.6 Agrega los endpoints en <code>backend/app/routers/chat.py</code></h2>
+<p>Primero, amplía el contrato de la respuesta: agrega la clase <code>Source</code> y el
+campo <code>sources</code> a <code>ChatResponse</code> (los dos nuevos en este módulo):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from .. import rag
+
+
+class Source(BaseModel):
+    title: str
+    snippet: str
+    score: float | None = None
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    skill_used: SkillUsed | None = None
+    sources: list[Source] | None = None</code></pre>
+<p>Después agrega los endpoints de documentos:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">class DocumentIn(BaseModel):
+    title: str
+    text: str
+
+
+@router.post("/documents")
+def add_document(doc: DocumentIn):
+    rag.add_document(doc.title, doc.text)
+    return {"status": "ok"}
+
+
+@router.get("/documents")
+def get_documents():
+    return rag.list_documents()</code></pre>
+</section>
+<section class="level2" id="usa-rag-dentro-de-chat">
+<h2>3.7 Usa RAG dentro de <code>/chat</code></h2>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">@router.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest) -&gt; ChatResponse:
+    client = get_llm_client()
+    messages = [{"role": m.role, "content": m.content} for m in request.history]
+
+    skill = select_skill(request.message)
+    skill_used = None
+    if skill:
+        messages.insert(0, {"role": "system", "content": skill["instructions"]})
+        skill_used = SkillUsed(
+            name=skill["name"],
+            reason=f'Se detectaron las palabras clave de "{skill["name"]}" en tu mensaje.',
+        )
+
+    retrieved = rag.search(request.message)
+    sources = None
+    if retrieved:
+        context = "\n\n".join(f'[{d["title"]}] {d["text"]}' for d in retrieved)
+        messages.insert(0, {
+            "role": "system",
+            "content": f"Usa el siguiente contexto si es relevante. Si no, ignóralo.\n\n{context}",
+        })
+        sources = [Source(title=d["title"], snippet=d["text"], score=d["score"]) for d in retrieved]
+
+    messages.append({"role": "user", "content": request.message})
+    reply = client.chat(messages)
+
+    return ChatResponse(reply=reply, skill_used=skill_used, sources=sources)</code></pre>
+</section>
+<section class="level2" id="pruébalo">
+<h2>3.8 Pruébalo</h2>
+<p>Carga un documento:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/documents \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Política de vacaciones", "text": "Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años."}'</code></pre>
+<p>Pregunta usando <strong>otras palabras</strong> (no las mismas del documento — esto es
+lo que demuestra que es búsqueda semántica y no por palabra clave):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Cuántos días de descanso remunerado tengo por año?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<blockquote class="alert">
+<p>Verifica la conexión de <code>EMBEDDING_PROVIDER</code> con una llamada de prueba
+antes del evento — sin ella no hay forma de probar que los sinónimos
+realmente encuentran el documento correcto.</p>
+</blockquote>
+<section class="level3" id="pruébalo-también-en-el-frontend">
+<h3>Pruébalo también en el frontend</h3>
+<p>El documento ya quedó cargado en LanceDB con el <code>curl</code> de arriba (no hay
+una pantalla en el frontend para <code>/documents</code> — eso solo se prueba por
+<code>curl</code>/Postman).</p>
+<ol type="1">
+<li>Abre <a href="http://localhost:5173">http://localhost:5173</a>.</li>
+<li>Escribe la misma pregunta con sinónimos: <code>¿Cuántos días de descanso remunerado tengo por año?</code></li>
+<li>Haz clic en <strong>“Ver proceso”</strong> debajo de la respuesta.</li>
+<li>Debe aparecer la sección <strong>“Fuentes (RAG)”</strong> con el título “Política de
+vacaciones” y el fragmento de texto que se usó — el <em>contrato</em> de la
+respuesta no cambió (sigue siendo el mismo panel, ahora con un campo
+más poblado).</li>
+</ol>
+</section>
+</section>
+<section class="level2" id="ejercicio-1-varios-documentos-en-competencia-10-min">
+<h2>3.9 Ejercicio 1 — varios documentos en competencia (10 min)</h2>
+<p>Carga 2-3 documentos más y prueba preguntas que obliguen al modelo a elegir
+entre ellos usando frases distintas a las del texto original.</p>
+</section>
+<section class="level2" id="ejercicio-2-por-qué-el-chunking-importa-15-min">
+<h2>3.10 Ejercicio 2 — por qué el chunking importa (15 min)</h2>
+<p>Hasta ahora cada documento es un párrafo corto — un caso fácil. En la vida
+real un documento mide páginas, y cargarlo completo como una sola fila
+hace que la búsqueda sea imprecisa: el vector representa “todo el
+documento” en promedio, no la frase puntual que te interesa.</p>
+<p>Compruébalo. Carga este “documento largo” como <strong>un solo</strong> registro:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/documents \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Manual del empleado (completo)",
+    "text": "Horario: la jornada es de 8:00 a 17:00 con una hora de almuerzo. Vacaciones: los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años. Teletrabajo: se permite hasta 3 días a la semana con aprobación del jefe directo. Viáticos: se reembolsan contra factura, hasta 30 días después del viaje."
+  }'</code></pre>
+<p>Pregunta por los viáticos:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Hasta cuándo tengo para presentar mis facturas de viaje?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>LanceDB persiste en disco (<code>./storage/lancedb</code>), así que ese documento
+sigue ahí aunque reinicies <code>uvicorn</code> — no hace falta borrarlo para el
+ejercicio. Ahora carga el <strong>mismo contenido, pero dividido en 4
+fragmentos</strong>, uno por tema (quedan en la misma tabla, junto al documento
+largo de arriba):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/documents -H "Content-Type: application/json" \
+  -d '{"title": "Manual — Horario", "text": "La jornada es de 8:00 a 17:00 con una hora de almuerzo."}'
+curl -s http://localhost:8000/documents -H "Content-Type: application/json" \
+  -d '{"title": "Manual — Vacaciones", "text": "Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años."}'
+curl -s http://localhost:8000/documents -H "Content-Type: application/json" \
+  -d '{"title": "Manual — Teletrabajo", "text": "Se permite teletrabajo hasta 3 días a la semana con aprobación del jefe directo."}'
+curl -s http://localhost:8000/documents -H "Content-Type: application/json" \
+  -d '{"title": "Manual — Viáticos", "text": "Los viáticos se reembolsan contra factura, hasta 30 días después del viaje."}'</code></pre>
+<p>Repite la misma pregunta sobre viáticos y compara el campo <code>sources</code> de
+ambas respuestas: con el documento partido, <code>sources</code> trae el fragmento
+“Manual — Viáticos” con un <code>score</code> más alto y sin ruido de los otros
+temas — justo el fragmento que responde la pregunta, nada más.</p>
+<blockquote class="alert">
+<p><strong>Chunking</strong> es exactamente esto: dividir documentos largos en
+fragmentos de tamaño razonable (en producción, 300-500 palabras con
+algo de solapamiento entre fragmentos consecutivos) antes de cargarlos.
+El resto del flujo (<code>search</code> → contexto → <code>sources</code>) no cambia — lo
+único que cambia es <em>cómo trozas el texto antes de llamar a
+<code>add_document</code></em>.</p>
+</blockquote>
+</section>
+<section class="level2" id="checklist-antes-de-seguir">
+<h2>Checklist antes de seguir</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"/><code>/documents</code> acepta nuevos documentos y <code>/chat</code> los usa cuando son relevantes.</label></li>
+<li><label><input type="checkbox"/>Entiendes por qué <code>rag.py</code> nunca llama a un SDK de embeddings directamente.</label></li>
+<li><label><input type="checkbox"/>Una pregunta con sinónimos (no las mismas palabras del documento) encuentra el documento correcto.</label></li>
+<li><label><input type="checkbox"/>Comprobaste en la práctica por qué un documento largo sin trocear da resultados más imprecisos que el mismo contenido en fragmentos.</label></li>
+<li><label><input type="checkbox"/>El frontend muestra “Fuentes (RAG)” cuando corresponde.</label></li>
+</ul>
+<hr/>
+</section>
+<section class="level2" id="bonus-opcional-carga-un-documento-real-y-mira-los-vectores">
+<h2>Bonus (opcional) — carga un documento real y mira los vectores</h2>
+<p>Hasta ahora cargaste párrafos cortos a mano por <code>curl</code>. Esto es para ver
+el patrón con un documento real y completo, y <strong>mirar por dentro</strong> qué es
+en verdad un embedding — no solo confiar en que “funciona”.</p>
+<section class="level3" id="carga-un-documento-real">
+<h3>Carga un documento real</h3>
+<p>Descarga cualquier documento público en <code>.txt</code> o <code>.pdf</code> que te sirva de
+ejemplo — por ejemplo, la <strong>Ley Orgánica de Educación Intercultural
+(LOEI) del Ecuador</strong>, desde el sitio oficial del Ministerio de Educación o
+de la Asamblea Nacional (o cualquier otro reglamento, manual o ley que te
+interese consultar). Guárdalo en:</p>
+<pre><button class="copy-btn">Copiar</button><code>backend/documents/loei.pdf</code></pre>
+<p>(La carpeta <code>documents/</code> ya está en <code>.gitignore</code> — el PDF no se commitea,
+cada quien pone el suyo.)</p>
+<p>Instala <code>pypdf</code> (lee texto de PDFs) si no lo hiciste ya:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install pypdf
+echo "pypdf" &gt;&gt; requirements.txt</code></pre>
+<p>Crea <code>backend/scripts/ingest_folder.py</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app import rag  # noqa: E402
+
+DOCS_DIR = Path(__file__).resolve().parent.parent / "documents"
+MAX_WORDS = 400
+
+
+def read_text(path: Path) -&gt; str:
+    if path.suffix.lower() == ".pdf":
+        from pypdf import PdfReader
+
+        reader = PdfReader(str(path))
+        return "\n".join(page.extract_text() or "" for page in reader.pages)
+    return path.read_text(encoding="utf-8")
+
+
+def chunk_text(text: str, max_words: int = MAX_WORDS) -&gt; list[str]:
+    words = text.split()
+    return [" ".join(words[i : i + max_words]) for i in range(0, len(words), max_words)]
+
+
+def main():
+    if not DOCS_DIR.exists():
+        print(f"No existe {DOCS_DIR} — créala y coloca ahí tu .txt o .pdf.")
+        return
+
+    archivos = [p for p in DOCS_DIR.iterdir() if p.suffix.lower() in (".txt", ".pdf")]
+    if not archivos:
+        print(f"{DOCS_DIR} está vacía — no hay .txt ni .pdf que cargar.")
+        return
+
+    for path in archivos:
+        texto = read_text(path)
+        fragmentos = chunk_text(texto)
+        print(f"{path.name}: {len(texto.split())} palabras -&gt; {len(fragmentos)} fragmentos")
+
+        for i, fragmento in enumerate(fragmentos, start=1):
+            rag.add_document(title=f"{path.stem} — parte {i}", text=fragmento)
+
+    print("\nListo. Para ver los vectores resultantes: python scripts/inspect_embeddings.py")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+<p>Nota que reutiliza el mismo chunking de 3.10 (bloques de ~400 palabras),
+ahora automático en vez de manual — cada fragmento se vuelve un
+<code>rag.add_document(...)</code> igual que un documento normal.</p>
+<p>Corre la ingesta (desde <code>backend/</code>):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
+mkdir -p documents        # si no la creaste ya
+# coloca tu loei.pdf (u otro archivo) aquí dentro
+python scripts/ingest_folder.py</code></pre>
+<p>Prueba una pregunta real sobre tu documento:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Qué dice la ley sobre la educación inicial?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+</section>
+<section class="level3" id="mira-los-vectores-por-dentro">
+<h3>Mira los vectores por dentro</h3>
+<p>Hasta ahora <code>vector</code> es un campo invisible — LanceDB lo calcula y lo usa,
+pero nunca lo viste. Agrega esto al final de <code>backend/app/rag.py</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">def inspect_vectors(limit: int = 5) -&gt; list[dict]:
+    """Para ver cómo queda un documento después de convertirlo a embeddings
+    (dimensión real del vector + sus primeros valores), no para uso en /chat."""
+    rows = _table.to_arrow().to_pylist()[:limit]
+    return [
+        {
+            "title": r["title"],
+            "vector_dim": len(r["vector"]),
+            "vector_preview": list(r["vector"][:8]),
+        }
+        for r in rows
+    ]</code></pre>
+<p>Y crea <code>backend/scripts/inspect_embeddings.py</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from app import rag  # noqa: E402
+
+
+def main():
+    docs = rag.inspect_vectors(limit=10)
+    if not docs:
+        print("No hay documentos cargados todavía (usa /documents o scripts/ingest_folder.py).")
+        return
+
+    for d in docs:
+        preview = ", ".join(f"{v:.4f}" for v in d["vector_preview"])
+        print(f"- {d['title']!r}")
+        print(f"    dimensiones: {d['vector_dim']}")
+        print(f"    primeros valores: [{preview}, ...]")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+<p>Corre:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">python scripts/inspect_embeddings.py</code></pre>
+<p>Vas a ver algo como:</p>
+<pre><button class="copy-btn">Copiar</button><code>- 'loei — parte 1'
+    dimensiones: 1536
+    primeros valores: [0.0123, -0.0456, 0.0789, ...]</code></pre>
+<p>Esto es literalmente lo que LanceDB guarda y compara con <code>search()</code>: un
+documento de texto se volvió una lista de 1536 números (con
+<code>text-embedding-3-small</code>; la dimensión depende de <code>EMBEDDING_DIM</code>). Ningún
+número individual “significa” algo por sí solo — lo que importa es que
+textos con significado parecido producen vectores <strong>cercanos entre sí</strong>
+(eso es justo lo que vuelve a aprovechar <code>search()</code> al buscar por
+similitud, en vez de por palabra exacta).</p>
+<blockquote class="alert">
+<p>Si tu documento es muy largo (una ley completa puede ser cientos de
+fragmentos), ten en cuenta el costo/tiempo de generar tantos embeddings
+— para el taller, con 1-2 capítulos o las primeras páginas alcanza para
+ver el patrón.</p>
+</blockquote>
+<p>Siguiente: <a href="04-agentes.html">04-agentes.md</a></p>
+</section>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>04 · Agentes de IA — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="">02 · Skills</a></li>
+<li><a href="03-rag.html" class="">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="current">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#módulo-04-agentes-de-ia">Módulo 04 — Agentes de IA</a></li>
+<li><a href="#la-idea-react-en-3-pasos">4.1 La idea: ReAct en 3 pasos</a></li>
+<li><a href="#crea-backendapptools.py">4.2 Crea backend/app/tools.py</a></li>
+<li><a href="#enseña-a-llm_client.py-a-pedir-herramientas">4.3 Enseña a llm_client.py a pedir herramientas</a></li>
+<li><a href="#crea-backendappagent.py-el-loop">4.4 Crea backend/app/agent.py — el loop</a></li>
+<li><a href="#conéctalo-en-chat.py">4.5 Conéctalo en chat.py</a></li>
+<li><a href="#pruébalo">4.6 Pruébalo</a></li>
+<li><a href="#ejercicio-1-agrega-una-tercera-herramienta-10-min">4.7 Ejercicio 1 — agrega una tercera herramienta (10 min)</a></li>
+<li><a href="#ejercicio-2-fuerza-dos-herramientas-en-un-mismo-mensaje-10-min">4.8 Ejercicio 2 — fuerza dos herramientas en un mismo mensaje (10 min)</a></li>
+<li><a href="#checklist-antes-de-seguir">Checklist antes de seguir</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="módulo-04-agentes-de-ia">
+<h2>Módulo 04 — Agentes de IA</h2>
+<blockquote class="alert">
+<p><strong>Objetivo:</strong> que el modelo deje de solo responder texto y empiece a
+<strong>decidir ejecutar acciones</strong> (herramientas) cuando las necesita, viendo
+el resultado antes de dar la respuesta final.</p>
+<p><strong>Herramientas:</strong> <em>function calling</em> vía la API compatible con OpenAI
+(lo soportan Groq, la API de OpenAI y vLLM con <code>--enable-auto-tool-choice</code>).</p>
+<p><strong>Prerequisito:</strong> Módulo 03. Si usas vLLM local, revisa 0.2 — necesitas
+levantarlo con <code>--enable-auto-tool-choice --tool-call-parser hermes</code>.</p>
+</blockquote>
+<hr/>
+</section>
+<section class="level2" id="la-idea-react-en-3-pasos">
+<h2>4.1 La idea: ReAct en 3 pasos</h2>
+<ol type="1">
+<li>Le mandas al modelo el mensaje del usuario <strong>y una lista de herramientas
+disponibles</strong> (nombre, descripción, parámetros).</li>
+<li>El modelo responde <strong>o bien</strong> con texto final, <strong>o bien</strong> pidiendo
+ejecutar una herramienta con ciertos argumentos.</li>
+<li>Si pidió una herramienta: la ejecutas tú (en tu backend), le devuelves el
+resultado como un mensaje más, y vuelves al paso 2. Repites hasta que
+responda con texto final.</li>
+</ol>
+<p>Esto es exactamente lo que en los frameworks de agentes se llama “loop
+ReAct” (Reason + Act) — aquí lo vas a escribir a mano, sin ningún
+framework, para entender qué hace uno por dentro.</p>
+</section>
+<section class="level2" id="crea-backendapptools.py">
+<h2>4.2 Crea <code>backend/app/tools.py</code></h2>
+<p>Las tres herramientas de este módulo son <strong>reales</strong>, no simuladas: la
+calculadora evalúa de verdad, el clima viene de una API real
+(<a href="https://open-meteo.com">Open-Meteo</a>, gratis y sin API key) y el correo se
+envía de verdad por Gmail. Para esta última necesitas credenciales de
+Google Cloud — sigue el
+<a href="apendice-credenciales.html">apéndice de credenciales</a> <strong>antes</strong> de llegar
+a 4.2.c, los pasos 4.2.a y 4.2.b no la necesitan.</p>
+<section class="level3" id="a-calculadora-y-clima-open-meteo">
+<h3>4.2.a Calculadora y clima (Open-Meteo)</h3>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install requests
+echo "requests" &gt;&gt; requirements.txt</code></pre>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import ast
+import operator
+
+import requests
+
+_OPS = {
+    ast.Add: operator.add,
+    ast.Sub: operator.sub,
+    ast.Mult: operator.mul,
+    ast.Div: operator.truediv,
+    ast.Pow: operator.pow,
+    ast.USub: operator.neg,
+}
+
+
+def _eval_node(node):
+    if isinstance(node, ast.Constant):
+        return node.value
+    if isinstance(node, ast.BinOp):
+        return _OPS[type(node.op)](_eval_node(node.left), _eval_node(node.right))
+    if isinstance(node, ast.UnaryOp):
+        return _OPS[type(node.op)](_eval_node(node.operand))
+    raise ValueError("Expresión no soportada")
+
+
+def calculate(expression: str) -&gt; str:
+    """Evalúa una expresión aritmética simple de forma segura (sin eval())."""
+    try:
+        tree = ast.parse(expression, mode="eval")
+        return str(_eval_node(tree.body))
+    except Exception as exc:
+        return f"Error evaluando '{expression}': {exc}"
+
+
+_WEATHER_CODES = {
+    0: "despejado",
+    1: "mayormente despejado",
+    2: "parcialmente nublado",
+    3: "nublado",
+    45: "con niebla",
+    48: "con niebla y escarcha",
+    51: "con llovizna ligera",
+    53: "con llovizna",
+    55: "con llovizna densa",
+    61: "con lluvia ligera",
+    63: "con lluvia",
+    65: "con lluvia fuerte",
+    71: "con nevada ligera",
+    73: "con nevada",
+    75: "con nevada fuerte",
+    80: "con chubascos ligeros",
+    81: "con chubascos",
+    82: "con chubascos fuertes",
+    95: "con tormenta eléctrica",
+}
+
+
+def get_clima(ciudad: str) -&gt; str:
+    """Clima actual real, vía Open-Meteo (geocoding + forecast, sin API key)."""
+    geo = requests.get(
+        "https://geocoding-api.open-meteo.com/v1/search",
+        params={"name": ciudad, "count": 1, "language": "es", "format": "json"},
+        timeout=10,
+    ).json()
+    results = geo.get("results")
+    if not results:
+        return f"No encontré la ciudad '{ciudad}'."
+
+    lugar = results[0]
+    forecast = requests.get(
+        "https://api.open-meteo.com/v1/forecast",
+        params={
+            "latitude": lugar["latitude"],
+            "longitude": lugar["longitude"],
+            "current_weather": "true",
+        },
+        timeout=10,
+    ).json()
+    actual = forecast.get("current_weather", {})
+    temperatura = actual.get("temperature")
+    descripcion = _WEATHER_CODES.get(actual.get("weathercode"), "condición desconocida")
+
+    return f"En {lugar['name']} hace {temperatura}°C y está {descripcion} (datos en vivo de Open-Meteo)."</code></pre>
+</section>
+<section class="level3" id="b-correo-real-gmail-api">
+<h3>4.2.b Correo real (Gmail API)</h3>
+<p>Primero crea <code>backend/app/email_client.py</code> (necesita
+<code>credentials/gmail_token.json</code> — ver el apéndice):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import base64
+from email.mime.text import MIMEText
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+
+from .config import get_settings
+
+SCOPES = ["https://www.googleapis.com/auth/gmail.send"]
+
+
+def _get_credentials() -&gt; Credentials:
+    settings = get_settings()
+    creds = Credentials.from_authorized_user_file(settings.gmail_token_path, SCOPES)
+
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
+    return creds
+
+
+def send_gmail(to: str, subject: str, body: str) -&gt; str:
+    try:
+        creds = _get_credentials()
+    except FileNotFoundError:
+        return (
+            "No encontré el token de Gmail. Corre "
+            "'python scripts/gmail_auth.py' siguiendo el apéndice de "
+            "credenciales antes de usar esta herramienta."
+        )
+
+    service = build("gmail", "v1", credentials=creds)
+
+    message = MIMEText(body)
+    message["to"] = to
+    message["subject"] = subject
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()
+    return f"Correo enviado a {to} con asunto '{subject}'."</code></pre>
+<p>Agrega <code>gmail_token_path</code> a <code>Settings</code> en <code>backend/app/config.py</code> (junto a
+los demás campos, con su <code>get_settings()</code> correspondiente):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">gmail_token_path: str
+# ...
+gmail_token_path=os.getenv("GMAIL_TOKEN_PATH", "credentials/gmail_token.json"),</code></pre>
+<p>Y en <code>backend/.env.example</code>:</p>
+<pre><button class="copy-btn">Copiar</button><code>GMAIL_TOKEN_PATH=credentials/gmail_token.json</code></pre>
+</section>
+<section class="level3" id="c-el-archivo-completo-de-tools.py">
+<h3>4.2.c El archivo completo de <code>tools.py</code></h3>
+<p>Con <code>get_clima</code> real y <code>send_email</code> agregados, <code>TOOLS_SCHEMA</code>/<code>TOOLS_IMPL</code>
+quedan así (agrega esto al final del archivo):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">def send_email(to: str, subject: str, body: str) -&gt; str:
+    """Envía un correo real por Gmail API (requiere credentials/gmail_token.json, ver tutorial)."""
+    from .email_client import send_gmail
+
+    return send_gmail(to=to, subject=subject, body=body)
+
+
+TOOLS_SCHEMA = [
+    {
+        "type": "function",
+        "function": {
+            "name": "calculate",
+            "description": "Evalúa una expresión aritmética, por ejemplo '23 * 4 + 1'.",
+            "parameters": {
+                "type": "object",
+                "properties": {"expression": {"type": "string"}},
+                "required": ["expression"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_clima",
+            "description": "Devuelve el clima actual real de una ciudad (Open-Meteo).",
+            "parameters": {
+                "type": "object",
+                "properties": {"ciudad": {"type": "string"}},
+                "required": ["ciudad"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "send_email",
+            "description": "Envía un correo real por Gmail a un destinatario, con asunto y cuerpo.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "to": {"type": "string", "description": "Correo del destinatario"},
+                    "subject": {"type": "string"},
+                    "body": {"type": "string"},
+                },
+                "required": ["to", "subject", "body"],
+            },
+        },
+    },
+]
+
+TOOLS_IMPL = {"calculate": calculate, "get_clima": get_clima, "send_email": send_email}</code></pre>
+<blockquote class="alert">
+<p>Si no alcanzaste a configurar las credenciales de Gmail antes del taller,
+salta 4.2.b y 4.2.c (deja solo <code>calculate</code>/<code>get_clima</code> en <code>TOOLS_IMPL</code>) —
+el resto del módulo funciona igual, solo sin la herramienta de correo.</p>
+</blockquote>
+</section>
+</section>
+<section class="level2" id="enseña-a-llm_client.py-a-pedir-herramientas">
+<h2>4.3 Enseña a <code>llm_client.py</code> a pedir herramientas</h2>
+<p>Agrega esto al archivo (necesita <code>import json</code> al inicio):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import json
+from dataclasses import dataclass, field
+
+
+@dataclass
+class ToolCallResult:
+    content: str | None
+    tool_calls: list[dict] = field(default_factory=list)
+    raw_tool_calls: list | None = None</code></pre>
+<p>Agrega un método <code>chat_with_tools</code> a <code>OpenAICompatibleClient</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">class OpenAICompatibleClient:
+    ...
+    def chat_with_tools(self, messages: list[dict], tools: list[dict]) -&gt; ToolCallResult:
+        response = self._client.chat.completions.create(
+            model=self._model, messages=messages, tools=tools
+        )
+        message = response.choices[0].message
+
+        if not message.tool_calls:
+            return ToolCallResult(content=message.content or "")
+
+        calls = [
+            {
+                "id": tc.id,
+                "name": tc.function.name,
+                "arguments": json.loads(tc.function.arguments or "{}"),
+            }
+            for tc in message.tool_calls
+        ]
+        raw = [
+            {
+                "id": tc.id,
+                "type": "function",
+                "function": {"name": tc.function.name, "arguments": tc.function.arguments},
+            }
+            for tc in message.tool_calls
+        ]
+        return ToolCallResult(content=message.content, tool_calls=calls, raw_tool_calls=raw)</code></pre>
+</section>
+<section class="level2" id="crea-backendappagent.py-el-loop">
+<h2>4.4 Crea <code>backend/app/agent.py</code> — el loop</h2>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from .llm_client import get_llm_client
+from .tools import TOOLS_SCHEMA, TOOLS_IMPL
+
+
+def run_agent(messages: list[dict], max_steps: int = 4) -&gt; tuple[str, list[dict]]:
+    client = get_llm_client()
+    trace: list[dict] = []
+
+    for _ in range(max_steps):
+        result = client.chat_with_tools(messages, TOOLS_SCHEMA)
+
+        if not result.tool_calls:
+            return result.content or "", trace
+
+        messages.append({
+            "role": "assistant",
+            "content": result.content or "",
+            "tool_calls": result.raw_tool_calls,
+        })
+
+        for call in result.tool_calls:
+            fn = TOOLS_IMPL.get(call["name"])
+            output = fn(**call["arguments"]) if fn else f"Herramienta desconocida: {call['name']}"
+            trace.append({"name": call["name"], "args": call["arguments"], "result": output})
+            messages.append({
+                "role": "tool",
+                "tool_call_id": call["id"],
+                "content": output,
+            })
+
+    return "No pude completar la tarea tras varios pasos de herramientas.", trace</code></pre>
+</section>
+<section class="level2" id="conéctalo-en-chat.py">
+<h2>4.5 Conéctalo en <code>chat.py</code></h2>
+<p>Primero, amplía el contrato de la respuesta: agrega la clase <code>ToolCall</code> y el
+campo <code>tool_calls</code> a <code>ChatResponse</code> (los dos nuevos en este módulo):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">class ToolCall(BaseModel):
+    name: str
+    args: dict | None = None
+    result: str | None = None
+
+
+class ChatResponse(BaseModel):
+    reply: str
+    skill_used: SkillUsed | None = None
+    sources: list[Source] | None = None
+    tool_calls: list[ToolCall] | None = None</code></pre>
+<p>Después reemplaza la llamada directa al cliente por el agente:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from ..agent import run_agent
+
+@router.post("/chat", response_model=ChatResponse)
+def chat(request: ChatRequest) -&gt; ChatResponse:
+    messages = [{"role": m.role, "content": m.content} for m in request.history]
+
+    skill = select_skill(request.message)
+    skill_used = None
+    if skill:
+        messages.insert(0, {"role": "system", "content": skill["instructions"]})
+        skill_used = SkillUsed(name=skill["name"], reason=f'Palabras clave de "{skill["name"]}" detectadas.')
+
+    retrieved = rag.search(request.message)
+    sources = None
+    if retrieved:
+        context = "\n\n".join(f'[{d["title"]}] {d["text"]}' for d in retrieved)
+        messages.insert(0, {"role": "system", "content": f"Usa este contexto si es relevante:\n\n{context}"})
+        sources = [Source(title=d["title"], snippet=d["text"], score=d["score"]) for d in retrieved]
+
+    messages.append({"role": "user", "content": request.message})
+    reply, trace = run_agent(messages)
+
+    tool_calls = [ToolCall(**t) for t in trace] if trace else None
+    return ChatResponse(reply=reply, skill_used=skill_used, sources=sources, tool_calls=tool_calls)</code></pre>
+<blockquote class="alert">
+<p>Nota: ya no llamamos a <code>client.chat(...)</code> directamente — <code>run_agent</code>
+internamente usa <code>chat_with_tools</code>, así que todo lo de los Módulos 02 y
+03 (skills, RAG) sigue funcionando sin cambios.</p>
+</blockquote>
+</section>
+<section class="level2" id="pruébalo">
+<h2>4.6 Pruébalo</h2>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Cuánto es 123 * 47 + 8?", "history": []}' | python3 -m json.tool</code></pre>
+<p>Deberías ver <code>tool_calls</code> con <code>"name": "calculate"</code> y el resultado
+correcto.</p>
+<p>Prueba el clima real (dato en vivo, no inventado):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Qué clima hace ahora mismo en Quito?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Si configuraste las credenciales de Gmail (4.2.b), prueba el correo —
+<strong>usa tu propio correo como destinatario</strong>, va a llegar de verdad:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Envíame un correo a tu-correo@gmail.com con asunto Prueba y cuerpo Esto salió del agente del taller", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<section class="level3" id="pruébalo-también-en-el-frontend">
+<h3>Pruébalo también en el frontend</h3>
+<ol type="1">
+<li>Abre <a href="http://localhost:5173">http://localhost:5173</a>.</li>
+<li>Escribe: <code>¿Cuánto es 123 * 47 + 8?</code></li>
+<li>Haz clic en <strong>“Ver proceso”</strong> debajo de la respuesta — ahora debe
+aparecer la sección <strong>“Herramientas usadas”</strong>, con <code>calculate</code> y el
+resultado <code>5789</code>.</li>
+<li>Prueba también el clima: <code>¿Qué clima hace ahora mismo en Quito?</code> — en
+“Herramientas usadas” debe verse <code>get_clima</code> con el dato real de
+Open-Meteo (no siempre el mismo número, a diferencia de antes).</li>
+<li>(Si configuraste Gmail) escribe un mensaje pidiendo el correo, con tu
+propio correo como destinatario, y confirma dos cosas: que
+“Herramientas usadas” muestra <code>send_email</code>, <strong>y</strong> que el correo llegó
+de verdad a tu bandeja.</li>
+</ol>
+<blockquote class="alert">
+<p>Este módulo requiere un proveedor con soporte de <em>tool calling</em> (Groq lo
+confirma; con vLLM necesitas <code>--enable-auto-tool-choice</code>, ver Módulo 00
+§0.2). Verifica esto antes del evento.</p>
+</blockquote>
+</section>
+</section>
+<section class="level2" id="ejercicio-1-agrega-una-tercera-herramienta-10-min">
+<h2>4.7 Ejercicio 1 — agrega una tercera herramienta (10 min)</h2>
+<p>Agrega una tercera herramienta (por ejemplo, <code>contar_palabras(texto)</code>),
+regístrala en <code>TOOLS_SCHEMA</code> y <code>TOOLS_IMPL</code>, y pide al modelo algo que la
+necesite.</p>
+</section>
+<section class="level2" id="ejercicio-2-fuerza-dos-herramientas-en-un-mismo-mensaje-10-min">
+<h2>4.8 Ejercicio 2 — fuerza dos herramientas en un mismo mensaje (10 min)</h2>
+<p>Pídele algo que necesite <strong>dos</strong> herramientas distintas en la misma
+pregunta:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "¿Cuánto es 15 * 15 y qué clima hace en Cuenca?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Mira el arreglo <code>tool_calls</code> completo: debería traer <strong>dos</strong> entradas,
+<code>calculate</code> y <code>get_clima</code>, cada una con su resultado — el agente decidió
+llamar a ambas en el mismo turno antes de armar la respuesta final.</p>
+<p>Ahora abre <code>app/agent.py</code> y revisa el parámetro <code>max_steps=4</code> de
+<code>run_agent</code>. Baja momentáneamente ese valor a <code>max_steps=1</code> y repite la
+misma pregunta de dos herramientas: el agente alcanza a ejecutar una sola
+tanda de herramientas y tiene que responder con lo que tenga — o directamente
+no logra completar la tarea. Vuelve a subirlo a <code>4</code> cuando termines la
+prueba.</p>
+<blockquote class="alert">
+<p><code>max_steps</code> es el límite de cuántas <strong>rondas</strong> de “pedir herramienta →
+ejecutar → ver resultado” puede dar el agente antes de forzar una
+respuesta. Muy bajo y el agente se queda a medias en tareas que
+necesitan varios pasos; muy alto y una herramienta que falla en loop
+puede consumir muchas llamadas al LLM (y plata) antes de rendirse. En
+producción este número se ajusta según qué tan compleja es la tarea
+típica de tu agente.</p>
+</blockquote>
+</section>
+<section class="level2" id="checklist-antes-de-seguir">
+<h2>Checklist antes de seguir</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"/>El agente ejecuta <code>calculate</code> o <code>get_clima</code> cuando corresponde.</label></li>
+<li><label><input type="checkbox"/><code>get_clima</code> responde con un dato real de Open-Meteo (no un texto fijo).</label></li>
+<li><label><input type="checkbox"/><code>tool_calls</code> aparece en la respuesta y en el frontend.</label></li>
+<li><label><input type="checkbox"/>Un mensaje que necesita dos herramientas las ejecuta ambas en <code>tool_calls</code>.</label></li>
+<li><label><input type="checkbox"/>Entiendes qué controla <code>max_steps</code> y por qué existe un límite.</label></li>
+<li><label><input type="checkbox"/>Las skills y RAG de los módulos anteriores siguen funcionando.</label></li>
+<li><label><input type="checkbox"/>(Si configuraste Gmail) <code>send_email</code> entrega un correo real a tu propia cuenta.</label></li>
+</ul>
+<p>Siguiente: <a href="05-mcp.html">05-mcp.md</a></p>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>

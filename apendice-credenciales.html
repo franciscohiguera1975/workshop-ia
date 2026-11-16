@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Apéndice · Credenciales — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="">02 · Skills</a></li>
+<li><a href="03-rag.html" class="">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="current">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#apéndice-credenciales-de-google-correo-real-y-google-sheets">Apéndice — Credenciales de Google (correo real y Google Sheets)</a></li>
+<li><a href="#crea-el-proyecto-de-google-cloud">0. Crea el proyecto de Google Cloud</a></li>
+<li><a href="#correo-real-gmail-api-oauth2">1. Correo real — Gmail API (OAuth2)</a></li>
+<li><a href="#google-sheets-real-cuenta-de-servicio">2. Google Sheets real — cuenta de servicio</a></li>
+<li><a href="#checklist-antes-del-módulo-0405">Checklist antes del Módulo 04/05</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="apéndice-credenciales-de-google-correo-real-y-google-sheets">
+<h2>Apéndice — Credenciales de Google (correo real y Google Sheets)</h2>
+<blockquote class="alert">
+<p>Esto es preparación <strong>antes</strong> del taller, no se hace en vivo — toma
+10-15 minutos y necesitas una cuenta de Google normal (Gmail). Todo lo de
+aquí es gratis: ni Gmail API, ni Sheets API, ni Drive API piden tarjeta
+ni facturación para el volumen de un taller.</p>
+<p>La interfaz de Google Cloud Console cambia de vez en cuando de lugar los
+botones — si algún nombre no coincide exactamente con lo que ves, busca
+el concepto (API Library, OAuth consent screen, Credentials, Service
+Accounts), no el texto literal del botón.</p>
+</blockquote>
+<p>Ambas credenciales viven en el <strong>mismo proyecto</strong> de Google Cloud, así que
+el paso 0 se hace una sola vez.</p>
+</section>
+<section class="level2" id="crea-el-proyecto-de-google-cloud">
+<h2>0. Crea el proyecto de Google Cloud</h2>
+<ol type="1">
+<li>Ve a <a href="https://console.cloud.google.com">console.cloud.google.com</a> con
+tu cuenta de Gmail.</li>
+<li>Arriba, junto al logo de “Google Cloud”, abre el selector de proyecto →
+<strong>Nuevo proyecto</strong>.</li>
+<li>Dale un nombre (por ejemplo <code>workshop-ia</code>) y créalo. Espera a que quede
+seleccionado como proyecto activo (arriba, junto al logo).</li>
+</ol>
+<p>Este proyecto es el que vas a usar para las dos credenciales.</p>
+<hr/>
+</section>
+<section class="level2" id="correo-real-gmail-api-oauth2">
+<h2>1. Correo real — Gmail API (OAuth2)</h2>
+<p>Se usa en el Módulo 04 (<code>send_email</code>) y se reutiliza en el Módulo 05
+(<code>enviar_correo</code>). Como el correo se envía <strong>desde tu propia cuenta de
+Gmail</strong>, Google exige que una persona (tú) dé su consentimiento — por eso
+es OAuth2 y no una clave simple.</p>
+<section class="level3" id="habilita-la-gmail-api">
+<h3>1.1 Habilita la Gmail API</h3>
+<ol type="1">
+<li>En el menú lateral: <strong>APIs y servicios → Biblioteca</strong>.</li>
+<li>Busca “Gmail API” → ábrela → <strong>Habilitar</strong>.</li>
+</ol>
+</section>
+<section class="level3" id="configura-la-pantalla-de-consentimiento-oauth">
+<h3>1.2 Configura la pantalla de consentimiento OAuth</h3>
+<ol type="1">
+<li><strong>APIs y servicios → Pantalla de consentimiento de OAuth</strong>.</li>
+<li>Tipo de usuario: <strong>Externo</strong> (no necesitas Google Workspace).</li>
+<li>Completa nombre de la app (ej. “Workshop IA”), tu correo de soporte y
+tu correo de contacto. Guarda.</li>
+<li>En <strong>Usuarios de prueba</strong>, agrega tu propia dirección de Gmail (la que
+va a enviar los correos). Mientras la app quede en estado <strong>Testing</strong>
+(no la publicas), solo las cuentas que agregues aquí pueden autenticar
+— y Google no pide verificación ni revisión para este modo.</li>
+</ol>
+</section>
+<section class="level3" id="crea-la-credencial-oauth-tipo-aplicación-de-escritorio">
+<h3>1.3 Crea la credencial OAuth (tipo “Aplicación de escritorio”)</h3>
+<ol type="1">
+<li><strong>APIs y servicios → Credenciales → + Crear credenciales → ID de
+cliente de OAuth</strong>.</li>
+<li>Tipo de aplicación: <strong>Aplicación de escritorio</strong>.</li>
+<li>Dale un nombre y créala.</li>
+<li>Descarga el JSON (botón de descarga junto a la credencial creada).</li>
+</ol>
+<p>Guárdalo en tu proyecto como:</p>
+<pre><button class="copy-btn">Copiar</button><code>backend/credentials/gmail_client_secret.json</code></pre>
+<p>(La carpeta <code>credentials/</code> ya está en <code>.gitignore</code> — nunca se commitea.)</p>
+</section>
+<section class="level3" id="genera-el-token-una-sola-vez-antes-del-taller">
+<h3>1.4 Genera el token (una sola vez, antes del taller)</h3>
+<p>Con las dependencias del backend instaladas (<code>pip install -r requirements.txt</code>, incluye <code>google-auth-oauthlib</code> y
+<code>google-api-python-client</code>):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
+python scripts/gmail_auth.py</code></pre>
+<p>Se abre el navegador, inicias sesión con la cuenta que agregaste como
+“usuario de prueba” y aceptas el permiso de <strong>enviar correo en tu
+nombre</strong>. Al terminar queda generado:</p>
+<pre><button class="copy-btn">Copiar</button><code>backend/credentials/gmail_token.json</code></pre>
+<p>Esta es la credencial que usa <code>send_email</code>/<code>enviar_correo</code> — no necesitas
+volver a correr el script salvo que el token expire o borres el archivo.</p>
+<blockquote class="alert">
+<p>Si ves “Google no ha verificado esta app”: es normal en modo Testing.
+Click en “Avanzado” → “Ir a Workshop IA (no seguro)”. Como el usuario de
+prueba eres tú mismo, es seguro continuar.</p>
+</blockquote>
+<hr/>
+</section>
+</section>
+<section class="level2" id="google-sheets-real-cuenta-de-servicio">
+<h2>2. Google Sheets real — cuenta de servicio</h2>
+<p>Se usa en el Módulo 05 (<code>agregar_fila_sheet</code>). A diferencia del correo, no
+hace falta que una persona inicie sesión cada vez — basta con una <strong>cuenta
+de servicio</strong> (una identidad propia del proyecto de Google Cloud) a la que
+le compartes una hoja de cálculo como si fuera otra persona con acceso de
+edición.</p>
+<section class="level3" id="habilita-las-apis">
+<h3>2.1 Habilita las APIs</h3>
+<ol type="1">
+<li><strong>APIs y servicios → Biblioteca</strong>.</li>
+<li>Busca y habilita <strong>Google Sheets API</strong>.</li>
+<li>Busca y habilita <strong>Google Drive API</strong> (la necesita internamente la
+librería cliente para resolver el archivo).</li>
+</ol>
+</section>
+<section class="level3" id="crea-la-cuenta-de-servicio">
+<h3>2.2 Crea la cuenta de servicio</h3>
+<ol type="1">
+<li><strong>IAM y administración → Cuentas de servicio → + Crear cuenta de
+servicio</strong>.</li>
+<li>Nombre (ej. <code>workshop-sheets</code>) → Crear y continuar.</li>
+<li>En el paso de permisos puedes dejarlo sin rol de proyecto (no lo
+necesitas, el acceso real se da al compartir la hoja) → Continuar →
+Listo.</li>
+<li>Entra a la cuenta de servicio recién creada → pestaña <strong>Claves</strong> →
+<strong>Agregar clave → Crear clave nueva → JSON</strong>. Se descarga un archivo.</li>
+</ol>
+<p>Guárdalo como:</p>
+<pre><button class="copy-btn">Copiar</button><code>backend/credentials/google_service_account.json</code></pre>
+<p>Copia también el <strong>email</strong> de la cuenta de servicio (termina en
+<code>...@workshop-ia.iam.gserviceaccount.com</code> o similar) — lo necesitas en el
+siguiente paso.</p>
+</section>
+<section class="level3" id="comparte-una-hoja-con-la-cuenta-de-servicio">
+<h3>2.3 Comparte una hoja con la cuenta de servicio</h3>
+<ol type="1">
+<li><p>Crea una hoja de cálculo normal en <a href="https://sheets.google.com">sheets.google.com</a>
+con tu cuenta de Gmail (por ejemplo, para el ejercicio del taller: una
+hoja con columnas “Nombre” y “Estado”).</p></li>
+<li><p>Botón <strong>Compartir</strong> → pega el email de la cuenta de servicio → rol
+<strong>Editor</strong> → Enviar.</p></li>
+<li><p>Copia el <strong>ID de la hoja</strong>: es la parte de la URL entre <code>/d/</code> y
+<code>/edit</code>, por ejemplo:</p>
+<pre><button class="copy-btn">Copiar</button><code>https://docs.google.com/spreadsheets/d/1AbCdEfGhIjKlMnOpQrStUvWxYz/edit
+                                       └──────────── ID ────────────┘</code></pre></li>
+</ol>
+<p>Ese ID es el <code>spreadsheet_id</code> que le vas a pasar a <code>agregar_fila_sheet</code>.</p>
+<hr/>
+</section>
+</section>
+<section class="level2" id="checklist-antes-del-módulo-0405">
+<h2>Checklist antes del Módulo 04/05</h2>
+<ul class="task-list">
+<li><label><input type="checkbox"/><code>backend/credentials/gmail_client_secret.json</code> existe.</label></li>
+<li><label><input type="checkbox"/>Corriste <code>python scripts/gmail_auth.py</code> y existe
+<code>backend/credentials/gmail_token.json</code>.</label></li>
+<li><label><input type="checkbox"/><code>backend/credentials/google_service_account.json</code> existe.</label></li>
+<li><label><input type="checkbox"/>Creaste una hoja de prueba y la compartiste (Editor) con el email de
+la cuenta de servicio.</label></li>
+<li><label><input type="checkbox"/>Tienes a mano el ID de esa hoja para probar <code>agregar_fila_sheet</code>.</label></li>
+</ul>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>

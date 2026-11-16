@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>05 · MCP — Workshop IA UTE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ute-blue: #005696;
+  --ute-dark-blue: #003366;
+  --ute-accent: #0099cc;
+  --bg-color: #f4f6f9;
+  --text-color: #333;
+  --sidebar-width: 300px;
+  --code-bg: #1e1e1e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--ute-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 4px solid var(--ute-accent);
+}
+
+.logo-container {
+  padding: 5px 15px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-container img {
+  height: 70px;
+  display: block;
+}
+
+.header-text { flex: 1; min-width: 200px; }
+
+h1.header-title {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 2px 0 0;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  background: white;
+  padding: 1.5rem;
+  height: calc(100vh - 86px);
+  position: sticky;
+  top: 86px;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.sidebar h3 {
+  font-size: 0.95rem;
+  color: var(--ute-dark-blue);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--ute-accent);
+}
+
+.sidebar h3:first-child { margin-top: 0; }
+
+.toc-list ul, .modules-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-list li, .modules-list li { margin-bottom: 0.3rem; }
+
+.toc-list a, .modules-list a {
+  text-decoration: none;
+  color: #555;
+  font-size: 0.88rem;
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toc-list a:hover, .toc-list a.active,
+.modules-list a:hover {
+  background: #e6f7ff;
+  color: var(--ute-blue);
+  font-weight: 500;
+}
+
+.modules-list a.current {
+  background: var(--ute-blue);
+  color: #fff;
+  font-weight: 500;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 2rem 3rem;
+  max-width: 900px;
+}
+
+main > h2:first-of-type {
+  margin-top: 0;
+}
+
+h2 {
+  color: var(--ute-dark-blue);
+  border-bottom: 2px solid #eee;
+  padding-bottom: 0.5rem;
+  margin-top: 2.5rem;
+}
+
+h3 {
+  color: var(--ute-blue);
+  margin-top: 1.5rem;
+}
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--ute-blue); }
+
+pre {
+  position: relative;
+  background: var(--code-bg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+code {
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+p code, li code {
+  background: #e0e0e0;
+  color: #c7254e;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+button.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+button.copy-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+blockquote.alert {
+  padding: 1rem;
+  border-radius: 6px;
+  margin: 1rem 0;
+  border-left: 4px solid #6c757d;
+  background: #f8f9fa;
+  color: #333;
+}
+
+blockquote.alert p:last-child { margin-bottom: 0; }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background: var(--ute-dark-blue);
+  color: white;
+}
+
+tr:nth-child(even) { background: #f6f9fb; }
+
+.table-wrap { overflow-x: auto; }
+
+hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+footer {
+  text-align: center;
+  padding: 2rem;
+  background: #fff;
+  color: #666;
+  border-top: 1px solid #ddd;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  main { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+  header { padding: 1rem; gap: 0.75rem; }
+  .logo-container img { height: 50px; }
+  h1.header-title { font-size: 1.05rem; }
+  main { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-container">
+    <img src="images/UTE-logo-blancoai-shadow.png" alt="Logo UTE">
+  </div>
+  <div class="header-text">
+    <h1 class="header-title">Workshop — Más allá del chat</h1>
+    <p class="header-subtitle">Skills, RAG, Agentes de IA y MCP · Universidad UTE</p>
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <h3>Módulos</h3>
+    <nav class="modules-list"><ul>
+      <li><a href="index.html" class="">Inicio</a></li>
+<li><a href="00-bienvenida-y-setup.html" class="">00 · Bienvenida y Setup</a></li>
+<li><a href="01-chat-simple.html" class="">01 · Chat simple</a></li>
+<li><a href="02-skills.html" class="">02 · Skills</a></li>
+<li><a href="03-rag.html" class="">03 · RAG</a></li>
+<li><a href="04-agentes.html" class="">04 · Agentes de IA</a></li>
+<li><a href="05-mcp.html" class="current">05 · MCP</a></li>
+<li><a href="apendice-credenciales.html" class="">Apéndice · Credenciales</a></li>
+    </ul></nav>
+
+    <h3>En esta página</h3>
+    <nav class="toc-list"><ul>
+      <li><a href="#módulo-05-mcp-model-context-protocol">Módulo 05 — MCP (Model Context Protocol)</a></li>
+<li><a href="#qué-resuelve-mcp">5.1 Qué resuelve MCP</a></li>
+<li><a href="#instala-el-sdk">5.2 Instala el SDK</a></li>
+<li><a href="#crea-el-servidor-backendmcp_server.py">5.3 Crea el servidor: backend/mcp_server.py</a></li>
+<li><a href="#crea-el-cliente-backendappmcp_client.py">5.4 Crea el cliente: backend/app/mcp_client.py</a></li>
+<li><a href="#conéctalo-en-chat.py">5.5 Conéctalo en chat.py</a></li>
+<li><a href="#pruébalo">5.6 Pruébalo</a></li>
+<li><a href="#ejercicio-1-agrega-una-herramienta-al-servidor-mcp-10-min">5.7 Ejercicio 1 — agrega una herramienta al servidor MCP (10 min)</a></li>
+<li><a href="#ejercicio-2-combina-rag-automático-módulo-03-con-mcp-10-min">5.8 Ejercicio 2 — combina RAG automático (Módulo 03) con MCP (10 min)</a></li>
+<li><a href="#cierre-del-taller">5.9 Cierre del taller</a></li>
+    </ul></nav>
+  </aside>
+
+  <main>
+    <section class="level1" id="workshop-más-allá-del-chat">
+
+<section class="level2" id="módulo-05-mcp-model-context-protocol">
+<h2>Módulo 05 — MCP (Model Context Protocol)</h2>
+<blockquote class="alert">
+<p><strong>Objetivo:</strong> mover las herramientas del Módulo 04 fuera del backend, a un
+<strong>servidor MCP</strong> independiente, y que el agente las descubra por
+protocolo en vez de tenerlas <em>hardcodeadas</em> en una lista de Python.</p>
+<p><strong>Herramientas:</strong> paquete <code>mcp</code> (SDK oficial de Python).</p>
+<p><strong>Prerequisito:</strong> Módulo 04. Este es el cierre del taller: reutiliza el
+loop de agente, las skills y el RAG de los módulos anteriores.</p>
+</blockquote>
+<hr/>
+</section>
+<section class="level2" id="qué-resuelve-mcp">
+<h2>5.1 Qué resuelve MCP</h2>
+<p>En el Módulo 04, <code>TOOLS_SCHEMA</code> y <code>TOOLS_IMPL</code> vivían dentro de tu backend.
+Si mañana quisieras usar esas mismas herramientas desde otro proyecto, o
+agregar las de alguien más sin copiar y pegar código, no habría forma
+estándar de hacerlo.</p>
+<p><strong>MCP estandariza eso</strong>: un servidor MCP expone sus herramientas por un
+protocolo común (en este módulo, sobre <code>stdio</code>), y cualquier cliente MCP
+— tu backend, Claude Desktop, otro agente — puede:</p>
+<ol type="1">
+<li>Conectarse al servidor.</li>
+<li>Pedirle la lista de herramientas disponibles (con su schema).</li>
+<li>Ejecutar una herramienta y recibir el resultado.</li>
+</ol>
+<p>Es la misma idea del Módulo 04 (el modelo decide, el backend ejecuta), pero
+ahora “ejecutar” significa “pedírselo a un servidor MCP” en vez de llamar
+una función local.</p>
+</section>
+<section class="level2" id="instala-el-sdk">
+<h2>5.2 Instala el SDK</h2>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install mcp
+echo "mcp" &gt;&gt; requirements.txt</code></pre>
+</section>
+<section class="level2" id="crea-el-servidor-backendmcp_server.py">
+<h2>5.3 Crea el servidor: <code>backend/mcp_server.py</code></h2>
+<p>Este archivo va <strong>junto a</strong> la carpeta <code>app/</code>, no dentro. Reempaqueta
+<code>calculate</code>/<code>get_clima</code>/RAG del Módulo 04 (mismas herramientas, ahora
+servidas por protocolo) y agrega <strong>una</strong> herramienta nueva, exclusiva de
+este módulo: agregar una fila a una Google Sheet real. Necesitas la
+credencial de <strong>cuenta de servicio</strong> de Google — sigue el
+<a href="apendice-credenciales.html">apéndice de credenciales</a> §2 antes de este
+paso.</p>
+<blockquote class="alert">
+<p>El correo (<code>send_email</code>) se queda exclusivamente en el Módulo 04 — no lo
+reexponemos aquí. Cada módulo de la segunda sesión tiene su propia
+integración real nueva (Módulo 04: correo; Módulo 05: Sheets) para que
+se note la diferencia; si reempaquetáramos también el correo acá, los
+dos módulos terminarían mostrando lo mismo con otro envoltorio.</p>
+</blockquote>
+<p>Primero, crea <code>backend/app/sheets_client.py</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+
+from .config import get_settings
+
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+
+
+def append_row(spreadsheet_id: str, valores: list[str]) -&gt; str:
+    settings = get_settings()
+
+    try:
+        creds = Credentials.from_service_account_file(
+            settings.google_service_account_path, scopes=SCOPES
+        )
+    except FileNotFoundError:
+        return (
+            "No encontré credentials/google_service_account.json. Sigue el "
+            "apéndice de credenciales antes de usar esta herramienta."
+        )
+
+    service = build("sheets", "v4", credentials=creds)
+    service.spreadsheets().values().append(
+        spreadsheetId=spreadsheet_id,
+        range="A1",
+        valueInputOption="USER_ENTERED",
+        insertDataOption="INSERT_ROWS",
+        body={"values": [valores]},
+    ).execute()
+
+    return f"Fila agregada a la hoja: {valores}"</code></pre>
+<p>Agrega <code>google_service_account_path</code> a <code>Settings</code>/<code>get_settings()</code> en
+<code>backend/app/config.py</code> (mismo patrón que <code>gmail_token_path</code> del Módulo
+04):</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">google_service_account_path: str
+# ...
+google_service_account_path=os.getenv(
+    "GOOGLE_SERVICE_ACCOUNT_PATH", "credentials/google_service_account.json"
+),</code></pre>
+<p>Y en <code>backend/.env.example</code>:</p>
+<pre><button class="copy-btn">Copiar</button><code>GOOGLE_SERVICE_ACCOUNT_PATH=credentials/google_service_account.json</code></pre>
+<p>Ahora sí, <code>backend/mcp_server.py</code> completo:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from mcp.server.mcpserver import MCPServer
+
+from app.tools import calculate, get_clima
+from app.rag import search as rag_search
+from app.sheets_client import append_row
+
+mcp = MCPServer("workshop-tools")
+
+
+@mcp.tool()
+def calcular(expression: str) -&gt; str:
+    """Evalúa una expresión aritmética simple, por ejemplo '23 * 4 + 1'."""
+    return calculate(expression)
+
+
+@mcp.tool()
+def clima(ciudad: str) -&gt; str:
+    """Devuelve el clima actual real de una ciudad (Open-Meteo)."""
+    return get_clima(ciudad)
+
+
+@mcp.tool()
+def buscar_documentos(consulta: str) -&gt; str:
+    """Busca en los documentos cargados con /documents y devuelve los fragmentos más relevantes."""
+    results = rag_search(consulta)
+    if not results:
+        return "No se encontraron documentos relevantes."
+    return "\n\n".join(f'[{r["title"]}] {r["text"]}' for r in results)
+
+
+@mcp.tool()
+def agregar_fila_sheet(spreadsheet_id: str, valores: list[str]) -&gt; str:
+    """Agrega una fila al final de una hoja de Google Sheets. `valores` es la lista de celdas de la fila."""
+    return append_row(spreadsheet_id, valores)
+
+
+if __name__ == "__main__":
+    mcp.run()</code></pre>
+<blockquote class="alert">
+<p>Si no alcanzaste a configurar la cuenta de servicio de Google, deja
+<code>agregar_fila_sheet</code> fuera (y su import de <code>sheets_client</code>) — el resto
+del servidor funciona igual.</p>
+</blockquote>
+<p>Nota que <code>buscar_documentos</code> reutiliza el <code>rag.py</code> del Módulo 03 — el mismo
+RAG, ahora expuesto como herramienta de un agente en vez de aplicarse
+automáticamente en cada mensaje.</p>
+<p><strong>Smoke test real</strong> (verifica el servidor completo — descubrir y ejecutar
+herramientas — sin necesitar el LLM todavía):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
+python3 &lt;&lt; 'EOF'
+import asyncio
+import sys
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+async def main():
+    params = StdioServerParameters(command=sys.executable, args=["mcp_server.py"])
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            tools = await session.list_tools()
+            print("Herramientas:", [t.name for t in tools.tools])
+
+            result = await session.call_tool("calcular", {"expression": "123 * 47 + 8"})
+            print("calcular -&gt;", "\n".join(p.text for p in result.content if hasattr(p, "text")))
+
+asyncio.run(main())
+EOF</code></pre>
+<p>Deberías ver <code>Herramientas: ['calcular', 'clima', 'buscar_documentos', 'agregar_fila_sheet']</code> y <code>calcular -&gt; 5789</code>.</p>
+</section>
+<section class="level2" id="crea-el-cliente-backendappmcp_client.py">
+<h2>5.4 Crea el cliente: <code>backend/app/mcp_client.py</code></h2>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import sys
+
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+from .llm_client import get_llm_client
+
+SERVER_PARAMS = StdioServerParameters(command=sys.executable, args=["mcp_server.py"])
+
+
+def _mcp_tool_to_schema(tool) -&gt; dict:
+    return {
+        "type": "function",
+        "function": {
+            "name": tool.name,
+            "description": tool.description or "",
+            "parameters": tool.input_schema,
+        },
+    }
+
+
+async def run_agent_with_mcp(messages: list[dict], max_steps: int = 4) -&gt; tuple[str, list[dict]]:
+    client = get_llm_client()
+    trace: list[dict] = []
+
+    async with stdio_client(SERVER_PARAMS) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            tools_response = await session.list_tools()
+            tools_schema = [_mcp_tool_to_schema(t) for t in tools_response.tools]
+
+            for _ in range(max_steps):
+                result = client.chat_with_tools(messages, tools_schema)
+
+                if not result.tool_calls:
+                    return result.content or "", trace
+
+                messages.append({
+                    "role": "assistant",
+                    "content": result.content or "",
+                    "tool_calls": result.raw_tool_calls,
+                })
+
+                for call in result.tool_calls:
+                    tool_result = await session.call_tool(call["name"], call["arguments"])
+                    output = "\n".join(
+                        part.text for part in tool_result.content if hasattr(part, "text")
+                    )
+                    trace.append({"name": call["name"], "args": call["arguments"], "result": output})
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": call["id"],
+                        "content": output,
+                    })
+
+    return "No pude completar la tarea tras varios pasos de herramientas.", trace</code></pre>
+<p><code>run_agent_with_mcp</code> es casi idéntico a <code>run_agent</code> del Módulo 04 — la
+diferencia es de dónde salen <code>tools_schema</code> (del servidor, vía
+<code>list_tools()</code>) y quién ejecuta la herramienta (<code>session.call_tool(...)</code> en
+vez de un diccionario local).</p>
+<blockquote class="alert">
+<p><strong>Simplificación a propósito:</strong> levantamos un servidor MCP nuevo en cada
+request (<code>stdio_client</code> lanza el proceso al entrar al <code>async with</code>). Es
+más fácil de seguir en un taller de 4 horas. En producción mantendrías
+una sesión MCP persistente en vez de reconectar en cada mensaje.</p>
+</blockquote>
+</section>
+<section class="level2" id="conéctalo-en-chat.py">
+<h2>5.5 Conéctalo en <code>chat.py</code></h2>
+<p>El endpoint pasa a ser <code>async def</code>, y usa <code>run_agent_with_mcp</code> en vez de
+<code>run_agent</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from ..mcp_client import run_agent_with_mcp
+
+@router.post("/chat", response_model=ChatResponse)
+async def chat(request: ChatRequest) -&gt; ChatResponse:
+    messages = [{"role": m.role, "content": m.content} for m in request.history]
+
+    skill = select_skill(request.message)
+    skill_used = None
+    if skill:
+        messages.insert(0, {"role": "system", "content": skill["instructions"]})
+        skill_used = SkillUsed(name=skill["name"], reason=f'Palabras clave de "{skill["name"]}" detectadas.')
+
+    messages.append({"role": "user", "content": request.message})
+    reply, trace = await run_agent_with_mcp(messages)
+
+    tool_calls = [ToolCall(**t) for t in trace] if trace else None
+    return ChatResponse(reply=reply, skill_used=skill_used, tool_calls=tool_calls)</code></pre>
+<blockquote class="alert">
+<p>Quitamos el bloque de RAG “automático” del Módulo 03 porque ahora
+<code>buscar_documentos</code> es una herramienta que el agente decide usar — si
+quieres mantener ambos comportamientos (RAG automático <strong>y</strong> como
+herramienta MCP), puedes dejar el bloque de <code>rag.search</code> de 03-rag.md
+también, no son excluyentes.</p>
+</blockquote>
+</section>
+<section class="level2" id="pruébalo">
+<h2>5.6 Pruébalo</h2>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Busca en los documentos cuántos días de vacaciones hay", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>(Necesitas haber cargado el documento de vacaciones del Módulo 03 con
+<code>POST /documents</code> — como el servidor MCP importa el mismo <code>rag.py</code>, ve los
+mismos documentos que ya cargaste.)</p>
+<p>El agente debería: ver la herramienta <code>buscar_documentos</code>, decidir usarla,
+recibir el fragmento del documento, y responder con la cifra correcta.
+<code>tool_calls</code> en la respuesta debe mostrar <code>buscar_documentos</code> como la
+herramienta usada.</p>
+<p>Si configuraste la cuenta de servicio de Google (§2 del apéndice), prueba
+<code>agregar_fila_sheet</code> — crea una hoja de prueba, comparte su ID (el que
+aparece en la URL entre <code>/d/</code> y <code>/edit</code>) y pídele al chat que escriba en
+ella:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Agrega una fila a la hoja TU_SPREADSHEET_ID con los valores Ana y Aprobado", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Abre la hoja en el navegador y confirma que la fila nueva está ahí.</p>
+<section class="level3" id="pruébalo-también-en-el-frontend">
+<h3>Pruébalo también en el frontend</h3>
+<ol type="1">
+<li>Abre <a href="http://localhost:5173">http://localhost:5173</a>.</li>
+<li>Escribe: <code>Busca en los documentos cuántos días de vacaciones hay</code></li>
+<li>Haz clic en <strong>“Ver proceso”</strong> — debe aparecer <strong>“Herramientas usadas”</strong>
+con <code>buscar_documentos</code> — exactamente el mismo panel del Módulo 04,
+ahora alimentado por un servidor MCP externo en vez de una función
+local (no hay forma de distinguirlo <em>a simple vista</em> en el frontend:
+la diferencia está en el backend, no en lo que ve el usuario — ese es
+justo el punto de MCP).</li>
+<li>(Si configuraste Sheets) pide agregar una fila con tu <code>spreadsheet_id</code>
+— “Herramientas usadas” debe mostrar <code>agregar_fila_sheet</code>, y la fila
+debe aparecer de verdad al abrir la hoja.</li>
+</ol>
+</section>
+</section>
+<section class="level2" id="ejercicio-1-agrega-una-herramienta-al-servidor-mcp-10-min">
+<h2>5.7 Ejercicio 1 — agrega una herramienta al servidor MCP (10 min)</h2>
+<p>Agrega una quinta herramienta a <code>mcp_server.py</code> (no a <code>tools.py</code> — esta
+vive solo del lado del servidor MCP, no la comparte el agente del Módulo
+04). Dos opciones, elige la que más te sirva para el grupo:</p>
+<p><strong>Opción A — nueva de verdad:</strong></p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">@mcp.tool()
+def contar_documentos() -&gt; str:
+    """Devuelve cuántos documentos hay cargados en la base de conocimiento."""
+    from app.rag import list_documents
+    return str(len(list_documents()))</code></pre>
+<p><strong>Opción B — el tip rápido para mostrar el valor de MCP en vivo:</strong> si
+algún grupo pregunta “¿y el correo del Módulo 04, se puede usar aquí
+también?”, la respuesta práctica (3 líneas, se escribe en el momento) es
+reexponerlo igual que <code>agregar_fila_sheet</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">from app.tools import send_email
+
+@mcp.tool()
+def enviar_correo(to: str, subject: str, body: str) -&gt; str:
+    """Envía un correo real por Gmail a un destinatario, con asunto y cuerpo."""
+    return send_email(to=to, subject=subject, body=body)</code></pre>
+<p>Esto es justo el punto del módulo: <code>send_email</code> ya existe (la escribiste
+en el Módulo 04), y <strong>no se reescribe nada</strong> — MCP solo necesita un
+wrapper de 3 líneas para volver a exponer una capacidad que el backend ya
+tenía. Buen momento para preguntarle al grupo: ¿por qué no dejamos esto
+por defecto desde el principio del módulo? (Respuesta: para que quede
+claro que calculadora/clima/RAG vienen heredados, y Sheets es la única
+pieza <em>nueva</em> de este módulo — si todo apareciera ya mezclado, no se nota
+qué es específico de MCP.)</p>
+<p>Corre el smoke test del paso 5.3 de nuevo — deberías ver la herramienta
+nueva en la lista descubierta <strong>sin haber tocado el backend ni el
+agente</strong>: el cliente las descubre dinámicamente vía <code>list_tools()</code>.
+Pídele al chat algo que la dispare.</p>
+</section>
+<section class="level2" id="ejercicio-2-combina-rag-automático-módulo-03-con-mcp-10-min">
+<h2>5.8 Ejercicio 2 — combina RAG automático (Módulo 03) con MCP (10 min)</h2>
+<p>En 5.5 quitamos el bloque de RAG automático del Módulo 03 para simplificar
+— pero, como dice la nota de arriba, no son excluyentes. Vuelve a agregar
+el bloque de <code>rag.search(request.message)</code> de <code>03-rag.md</code> (sección 3.7)
+justo antes del <code>messages.append({"role": "user", ...})</code> en <code>chat.py</code>, <strong>y
+deja también</strong> la herramienta <code>buscar_documentos</code> del servidor MCP.</p>
+<p>Prueba una pregunta sobre tus documentos y observa la respuesta completa:
+ahora <code>sources</code> (RAG automático, siempre corre) <strong>y</strong> <code>tool_calls</code>
+(<code>buscar_documentos</code>, el agente decide si la usa) pueden aparecer juntos
+en la misma respuesta. Pregúntate: ¿tiene sentido tener ambos caminos al
+mismo conocimiento en un sistema real, o es redundante? No hay una
+respuesta única — depende de si quieres que <em>siempre</em> se consulte el
+conocimiento propio (RAG automático) o que el agente decida <em>cuándo</em> vale
+la pena ir a buscarlo (herramienta MCP).</p>
+</section>
+<section class="level2" id="cierre-del-taller">
+<h2>5.9 Cierre del taller</h2>
+<p>Recapitulando lo que construiste en un solo backend, sin frameworks:</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 50%"/>
+<col style="width: 50%"/>
+</colgroup>
+<thead>
+<tr>
+<th>Bloque</th>
+<th>Qué aprendiste</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chat simple</td>
+<td>Un LLM es solo una función: mensajes entran, texto sale.</td>
+</tr>
+<tr>
+<td>Skills</td>
+<td>Elegir instrucciones según la intención es solo lógica + prompts.</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>“Conocimiento propio” = buscar y meterlo en el prompt.</td>
+</tr>
+<tr>
+<td>Agentes</td>
+<td>El modelo puede decidir actuar, no solo responder — vía un loop.</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>Esas acciones se pueden estandarizar y compartir entre proyectos.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Ideas para seguir por tu cuenta: conectar tu servidor MCP a tu propia base
+de datos, agregar más acciones reales (Slack, un CRM, tu calendario), o
+probar tu servidor MCP desde Claude Desktop en vez de tu propio backend —
+ya tienes la calculadora, el clima, el correo y Sheets corriendo como
+herramientas reales, el mismo servidor funciona igual desde cualquier
+cliente MCP.</p>
+</section>
+</section>
+
+  </main>
+</div>
+
+<footer>
+  <p>Workshop — Más allá del chat: Skills, RAG, Agentes de IA y MCP</p>
+  <p>&copy; Universidad UTE</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script>
+hljs.highlightAll();
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+      const originalText = btn.innerText;
+      btn.innerText = '¡Copiado!';
+      setTimeout(() => { btn.innerText = originalText; }, 2000);
+    });
+  });
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      document.querySelectorAll('.toc-list a').forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + entry.target.id) {
+          link.classList.add('active');
+        }
+      });
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('main > section[id], main > section > section[id]').forEach(section => {
+  observer.observe(section);
+});
+</script>
+</body>
+</html>
