@@ -449,13 +449,15 @@ del servidor funciona igual.</p>
 RAG, ahora expuesto como herramienta de un agente en vez de aplicarse
 automáticamente en cada mensaje.</p>
 <p><strong>Smoke test real</strong> (verifica el servidor completo — descubrir y ejecutar
-herramientas — sin necesitar el LLM todavía):</p>
-<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
-python3 &lt;&lt; 'EOF'
-import asyncio
+herramientas — sin necesitar el LLM todavía). Los heredocs de bash
+(<code>&lt;&lt; 'EOF'</code>) no funcionan igual en PowerShell, así que en vez de pegarlo
+en la terminal, créalo como archivo — funciona idéntico en los tres
+sistemas. Crea <code>backend/smoke_test_mcp.py</code>:</p>
+<pre class="python"><button class="copy-btn">Copiar</button><code class="python">import asyncio
 import sys
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+
 
 async def main():
     params = StdioServerParameters(command=sys.executable, args=["mcp_server.py"])
@@ -468,8 +470,11 @@ async def main():
             result = await session.call_tool("calcular", {"expression": "123 * 47 + 8"})
             print("calcular -&gt;", "\n".join(p.text for p in result.content if hasattr(p, "text")))
 
-asyncio.run(main())
-EOF</code></pre>
+
+asyncio.run(main())</code></pre>
+<p>Y corre (Ubuntu/macOS: <code>python3</code>; Windows: <code>python</code>):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
+python3 smoke_test_mcp.py</code></pre>
 <p>Deberías ver <code>Herramientas: ['calcular', 'clima', 'buscar_documentos', 'agregar_fila_sheet']</code> y <code>calcular -&gt; 5789</code>.</p>
 </section>
 <section class="level2" id="crea-el-cliente-backendappmcp_client.py">

@@ -324,10 +324,21 @@ proveedor compatible).</p>
 </section>
 <section class="level2" id="crear-el-proyecto">
 <h2>1.1 Crear el proyecto</h2>
+<p><strong>Ubuntu/macOS:</strong></p>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">mkdir -p backend/app/routers
 cd backend
 python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate</code></pre>
+source .venv/bin/activate</code></pre>
+<p><strong>Windows (PowerShell):</strong></p>
+<pre class="powershell"><button class="copy-btn">Copiar</button><code class="powershell">mkdir backend\app\routers
+cd backend
+python -m venv .venv
+.venv\Scripts\Activate.ps1</code></pre>
+<blockquote class="alert">
+<p>Si PowerShell bloquea el script de activación con un error de
+“ejecución de scripts deshabilitada”, corre una vez (como administrador
+no hace falta): <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>.</p>
+</blockquote>
 </section>
 <section class="level2" id="instalar-dependencias">
 <h2>1.2 Instalar dependencias</h2>
@@ -396,7 +407,7 @@ LLM_PROVIDER=groq
 LLM_BASE_URL=https://api.groq.com/openai/v1
 LLM_API_KEY=
 LLM_MODEL=llama-3.3-70b-versatile</code></pre>
-<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cp .env.example .env</code></pre>
+<p>Ubuntu/macOS: <code>cp .env.example .env</code> — Windows (PowerShell): <code>copy .env.example .env</code></p>
 <p>Crea <code>backend/app/config.py</code>:</p>
 <pre class="python"><button class="copy-btn">Copiar</button><code class="python">import os
 from dataclasses import dataclass
@@ -464,11 +475,11 @@ def get_llm_client() -&gt; OpenAICompatibleClient:
     )</code></pre>
 <p><strong>Pruébalo aislado, antes de conectarlo a HTTP</strong> — es una buena práctica:
 verificar una pieza por separado antes de montarla sobre FastAPI.</p>
-<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">python3 -c "
-from app.llm_client import get_llm_client
-client = get_llm_client()
-print(client.chat([{'role': 'user', 'content': 'Hola'}]))
-"</code></pre>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">python3 -c "from app.llm_client import get_llm_client; client = get_llm_client(); print(client.chat([{'role': 'user', 'content': 'Hola'}]))"</code></pre>
+<p>(Windows: igual, cambiando <code>python3</code> por <code>python</code> — recuerda la nota de
+compatibilidad del Módulo 00. Esta forma de una sola línea funciona
+idéntica en PowerShell; evitamos aquí el formato con comillas multilínea
+porque PowerShell lo interpreta distinto a bash.)</p>
 <p>Deberías ver una respuesta real del modelo que configuraste en <code>.env</code>. Si
 ves un <code>RuntimeError</code> sobre <code>LLM_API_KEY</code>, revisa el Módulo 00 §0.2 y tu
 <code>.env</code>.</p>

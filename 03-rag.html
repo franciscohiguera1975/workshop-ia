@@ -720,8 +720,14 @@ if __name__ == "__main__":
 ahora automático en vez de manual — cada fragmento se vuelve un
 <code>rag.add_document(...)</code> igual que un documento normal.</p>
 <p>Corre la ingesta (desde <code>backend/</code>):</p>
+<p><strong>Ubuntu/macOS:</strong></p>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd backend
 mkdir -p documents        # si no la creaste ya
+# coloca tu loei.pdf (u otro archivo) aquí dentro
+python3 scripts/ingest_folder.py</code></pre>
+<p><strong>Windows (PowerShell):</strong></p>
+<pre class="powershell"><button class="copy-btn">Copiar</button><code class="powershell">cd backend
+mkdir documents        # si no la creaste ya
 # coloca tu loei.pdf (u otro archivo) aquí dentro
 python scripts/ingest_folder.py</code></pre>
 <p>Prueba una pregunta real sobre tu documento:</p>
@@ -770,8 +776,8 @@ def main():
 
 if __name__ == "__main__":
     main()</code></pre>
-<p>Corre:</p>
-<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">python scripts/inspect_embeddings.py</code></pre>
+<p>Corre (Ubuntu/macOS: <code>python3</code>; Windows: <code>python</code>):</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">python3 scripts/inspect_embeddings.py</code></pre>
 <p>Vas a ver algo como:</p>
 <pre><button class="copy-btn">Copiar</button><code>- 'loei — parte 1'
     dimensiones: 1536

@@ -315,6 +315,23 @@ carpeta vacía en el Módulo 01.</p>
 <p><strong>Prerequisito:</strong> ninguno.</p>
 </blockquote>
 <hr/>
+<blockquote class="alert">
+<p><strong>Compatibilidad Windows / Ubuntu-macOS:</strong> el taller funciona igual en
+los tres sistemas. Dos diferencias se repiten en <strong>todos</strong> los módulos
+y aplican siempre igual, así que no se repiten comando por comando:</p>
+<ul>
+<li><strong>Python:</strong> en Ubuntu/macOS el comando es <code>python3</code>; en Windows es
+<code>python</code> (sin el 3). Donde veas <code>python3</code> en cualquier bloque de
+código, en Windows quita el <code>3</code>.</li>
+<li><strong><code>curl</code> en Windows:</strong> PowerShell trae un <code>curl</code> que en realidad es
+otro comando (<code>Invoke-WebRequest</code>) y no entiende <code>-s</code>/<code>-d</code>/<code>-H</code>. En
+Windows escribe <strong><code>curl.exe</code></strong> en vez de <code>curl</code> — fuerza el binario
+real, y el resto del comando (flags, comillas, JSON) es idéntico.</li>
+</ul>
+<p>Donde el comando cambia de verdad (crear/activar el entorno virtual,
+crear carpetas, copiar archivos), el tutorial muestra las dos versiones
+por separado, con pestañas <strong>Ubuntu/macOS</strong> y <strong>Windows (PowerShell)</strong>.</p>
+</blockquote>
 </section>
 <section class="level2" id="qué-vamos-a-construir">
 <h2>0.1 Qué vamos a construir</h2>
@@ -442,9 +459,16 @@ antes del evento).</li>
 <h3>vLLM local (opcional, requiere GPU)</h3>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install vllm
 vllm serve Qwen/Qwen2.5-7B-Instruct --port 8001 --enable-auto-tool-choice --tool-call-parser hermes</code></pre>
-<p><code>--enable-auto-tool-choice</code> hace falta recién en el Módulo 04 (Agentes).
+<blockquote class="alert">
+<p>vLLM solo soporta Linux de forma nativa. En Windows necesitas <strong>WSL2</strong>
+(Windows Subsystem for Linux) con una distribución Ubuntu — dentro de
+esa terminal WSL los comandos de arriba son idénticos a Ubuntu nativo.
+Si no quieres instalar WSL2, usa Groq, OpenRouter o Google AI Studio en
+su lugar.
+<code>--enable-auto-tool-choice</code> hace falta recién en el Módulo 04 (Agentes).
 Anota: <code>LLM_PROVIDER=vllm</code>, <code>LLM_BASE_URL=http://localhost:8001/v1</code>,
 <code>LLM_API_KEY=EMPTY</code>, <code>LLM_MODEL=Qwen/Qwen2.5-7B-Instruct</code>.</p>
+</blockquote>
 </section>
 <section class="level3" id="otro-proveedor-compatible-con-openai">
 <h3>Otro proveedor compatible con OpenAI</h3>
@@ -460,10 +484,16 @@ del evento — estas ofertas cambian seguido.</p>
 <p>El frontend no se programa en el taller — se instala una vez y queda
 corriendo de fondo para que, desde el Módulo 01 en adelante, veas cada
 endpoint nuevo funcionando en una interfaz de chat real.</p>
+<p><strong>Ubuntu/macOS:</strong></p>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">cd frontend
 npm install
 cp .env.example .env     # VITE_API_URL=http://localhost:8000
 npm run dev               # http://localhost:5173</code></pre>
+<p><strong>Windows (PowerShell):</strong></p>
+<pre class="powershell"><button class="copy-btn">Copiar</button><code class="powershell">cd frontend
+npm install
+copy .env.example .env     # VITE_API_URL=http://localhost:8000
+npm run dev                 # http://localhost:5173</code></pre>
 <p>Si lo abres ahora en http://localhost:5173 verás la interfaz, pero los
 mensajes van a fallar — es normal, el backend todavía no existe. Lo
 construyes en el Módulo 01.</p>
@@ -477,7 +507,7 @@ prefieres probar cada endpoint ahí en vez de con <code>curl</code>.</p>
 <section class="level2" id="checklist-antes-de-seguir">
 <h2>Checklist antes de seguir</h2>
 <ul class="task-list">
-<li><label><input type="checkbox"/><code>python3 --version</code> ≥ 3.10 y <code>node --version</code> ≥ 18.</label></li>
+<li><label><input type="checkbox"/><code>python3 --version</code> (Windows: <code>python --version</code>) ≥ 3.10 y <code>node --version</code> ≥ 18.</label></li>
 <li><label><input type="checkbox"/>Elegiste proveedor de LLM (Groq, ChatGPT API o vLLM local) y tienes la API key a mano, o el servidor local corriendo.</label></li>
 <li><label><input type="checkbox"/><code>npm install</code> del frontend terminó sin errores.</label></li>
 <li><label><input type="checkbox"/>(Opcional) importaste la colección de Postman.</label></li>
