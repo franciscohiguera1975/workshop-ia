@@ -350,13 +350,21 @@ echo "lancedb" &gt;&gt; requirements.txt</code></pre>
 <h2>3.3 Configura el proveedor de embeddings</h2>
 <p>Igual que con <code>LLM_PROVIDER</code>, el <em>de dónde salen los embeddings</em> es
 configuración, no código. Agrega a <code>backend/.env.example</code> (y a tu <code>.env</code>):</p>
-<pre><button class="copy-btn">Copiar</button><code># Elegir proveedor de embeddings: openai | vllm
+<pre><button class="copy-btn">Copiar</button><code># Elegir proveedor de embeddings: openai | gemini | vllm
 # (Groq no ofrece un endpoint de embeddings — no es una opción aquí)
 EMBEDDING_PROVIDER=openai
 EMBEDDING_BASE_URL=https://api.openai.com/v1
 EMBEDDING_API_KEY=
 EMBEDDING_MODEL=text-embedding-3-small
 EMBEDDING_DIM=1536
+
+# --- Gemini (Google AI Studio) — GRATIS, sin tarjeta. Clave en
+# https://aistudio.google.com/apikey (solo cuenta de Google) ---
+# EMBEDDING_PROVIDER=gemini
+# EMBEDDING_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
+# EMBEDDING_API_KEY=
+# EMBEDDING_MODEL=gemini-embedding-001
+# EMBEDDING_DIM=768
 
 # --- vLLM local: necesitas un SEGUNDO servidor sirviendo un modelo de
 # embeddings (puerto distinto al del chat) ---
@@ -367,12 +375,18 @@ EMBEDDING_DIM=1536
 # EMBEDDING_DIM=1024</code></pre>
 <blockquote class="alert">
 <p>Si en el Módulo 00 elegiste <strong>Groq</strong> o <strong>vLLM</strong> para el chat, necesitas
-igual una clave de OpenAI solo para este endpoint de embeddings (Groq no
-los ofrece). Alternativas dedicadas a embeddings con capa gratuita:
-Voyage AI (mejor calidad, pero el registro pasa por una cuenta de
-MongoDB Atlas) o Jina AI (registro directo, cuota más chica) — ambas
-requieren su propia clase de embeddings en <code>lancedb.embeddings</code>, distinta
-a la de abajo; no se cubren en este módulo por tiempo.</p>
+igual una clave para este endpoint de embeddings (Groq no los ofrece). La
+opción sin costo y sin tarjeta es <strong>Gemini</strong>: crea una clave gratis en
+<a href="https://aistudio.google.com/apikey">Google AI Studio</a> (tope diario en el
+free tier, pero de sobra para el taller) y usa el bloque de arriba — el
+endpoint <code>.../v1beta/openai</code> es la capa de compatibilidad con OpenAI que
+expone Google, así que reutiliza el mismo adaptador de abajo, con un
+ajuste pequeño de código (ver 3.4). Otras alternativas dedicadas a
+embeddings con capa gratuita: Voyage AI (mejor calidad, pero el registro
+pasa por una cuenta de MongoDB Atlas) o Jina AI (registro directo, cuota
+más chica) — ambas requieren su propia clase de embeddings en
+<code>lancedb.embeddings</code>, distinta a la de abajo; no se cubren en este módulo
+por tiempo.</p>
 </blockquote>
 <p>Amplía <code>backend/app/config.py</code> (agrega los campos nuevos a <code>Settings</code> y a
 <code>get_settings</code>):</p>
@@ -407,8 +421,8 @@ def get_settings() -&gt; Settings:
 <p>Esta es la única pieza “manual”: una función de embeddings que LanceDB va
 a usar automáticamente. Llama a cualquier endpoint compatible con OpenAI
 — igual que <code>llm_client.py</code>, pero para <code>/embeddings</code> en vez de
-<code>/chat/completions</code> — por eso sirve tanto para OpenAI como para un modelo
-de embeddings servido con vLLM.</p>
+<code>/chat/completions</code> — por eso sirve tanto para OpenAI como para Gemini (vía
+su capa de compatibilidad) o para un modelo de embeddings servido con vLLM.</p>
 <pre class="python"><button class="copy-btn">Copiar</button><code class="python">from typing import List, Union
 
 from lancedb.embeddings import TextEmbeddingFunction, register
@@ -418,12 +432,13 @@ from lancedb.embeddings.registry import get_registry
 @register("openai_compatible_embeddings")
 class OpenAICompatibleEmbeddings(TextEmbeddingFunction):
     """Embeddings reales vía cualquier endpoint compatible con OpenAI
-    (la API de OpenAI, o vLLM sirviendo un modelo de embeddings)."""
+    (la API de OpenAI, Gemini o vLLM sirviendo un modelo de embeddings)."""
 
     name: str
     base_url: str
     api_key: str
     dim: int = 1536
+    send_dimensions: bool = False
 
     def ndims(self) -&gt; int:
         return self.dim
@@ -432,7 +447,8 @@ class OpenAICompatibleEmbeddings(TextEmbeddingFunction):
         from openai import OpenAI
 
         client = OpenAI(base_url=self.base_url, api_key=self.api_key)
-        response = client.embeddings.create(model=self.name, input=list(texts))
+        extra = {"dimensions": self.dim} if self.send_dimensions else {}
+        response = client.embeddings.create(model=self.name, input=list(texts), **extra)
         return [d.embedding for d in response.data]
 
 
@@ -447,7 +463,22 @@ def get_embedding_function():
         base_url=settings.embedding_base_url,
         api_key=settings.embedding_api_key,
         dim=settings.embedding_dim,
+        send_dimensions=settings.embedding_provider == "gemini",
     )</code></pre>
+<p>El único cambio real de código es <code>send_dimensions</code>. <code>gemini-embedding-001</code>
+devuelve por defecto un vector de 3072 posiciones — si no le pedimos
+explícitamente que lo recorte (parámetro <code>dimensions</code>, el mismo que usa la
+API de OpenAI desde sus modelos v3), el vector que llega no coincidiría con
+el <code>EMBEDDING_DIM</code> que declaraste, y <code>search()</code> fallaría al compararlo
+contra la columna <code>vector</code> de la tabla. Por eso el flag es condicional:
+<code>text-embedding-3-small</code> (OpenAI) ya devuelve 1536 por defecto y un
+servidor vLLM típico no espera (y puede rechazar) ese parámetro, así que
+solo se envía cuando el proveedor es Gemini.</p>
+<blockquote class="alert">
+<p>Si ya cargaste documentos con otro <code>EMBEDDING_DIM</code> y cambias de
+proveedor, borra <code>./storage/lancedb</code> antes de probar: el esquema de la
+tabla queda fijo a la dimensión del primer documento que insertaste.</p>
+</blockquote>
 </section>
 <section class="level2" id="la-base-vectorial-backendapprag.py">
 <h2>3.5 La base vectorial: <code>backend/app/rag.py</code></h2>
