@@ -405,6 +405,18 @@ def chat(request: ChatRequest) -&gt; ChatResponse:
   -d '{"message": "Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.", "history": []}' \
   | python3 -m json.tool</code></pre>
 <p>Deberías ver <code>"skill_used": {"name": "resumen", "reason": "..."}</code>.</p>
+<p>Disparando la skill de traductor:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Traduce esto al inglés: Hola, ¿cómo estás?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Deberías ver <code>"skill_used": {"name": "traductor", "reason": "..."}</code>.</p>
+<p>Disparando la skill de code-review:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Revisa este código: def suma(a, b): return a+b", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Deberías ver <code>"skill_used": {"name": "code-review", "reason": "..."}</code>.</p>
 <section class="level3" id="pruébalo-también-en-el-frontend">
 <h3>Pruébalo también en el frontend</h3>
 <ol type="1">
