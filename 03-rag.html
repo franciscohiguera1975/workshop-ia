@@ -318,8 +318,10 @@ footer {
 no solo lo que aprendió en su entrenamiento — usando una base de datos
 vectorial real, no una simulación hecha a mano.</p>
 <p><strong>Herramientas:</strong> <a href="https://lancedb.github.io/lancedb/">LanceDB</a> (motor
-vectorial embebido — sin servidor que levantar) + el SDK <code>openai</code> para
-los embeddings (mismo patrón que ya usas para el chat).</p>
+vectorial embebido — sin servidor que levantar) + <code>sentence-transformers</code>
+para calcular los embeddings <strong>gratis y en tu propia máquina</strong> (sin API
+key, sin cuenta, sin factura — ver 3.3 para por qué esta es la opción
+por defecto).</p>
 <p><strong>Prerequisito:</strong> Módulo 02.</p>
 </blockquote>
 <hr/>
@@ -342,24 +344,45 @@ misma base vectorial que usa un proyecto real construido con este patrón
 (Groq/OpenAI/vLLM para el modelo, LanceDB para el almacenamiento).</p>
 </section>
 <section class="level2" id="instala-lancedb">
-<h2>3.2 Instala LanceDB</h2>
+<h2>3.2 Instala LanceDB y el modelo de embeddings local</h2>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">pip install lancedb
-echo "lancedb" &gt;&gt; requirements.txt</code></pre>
+echo "lancedb" &gt;&gt; requirements.txt
+
+# torch CPU-only PRIMERO — si no, pip intenta bajar la build con soporte
+# CUDA (varios GB, inútil en este taller y lento/pesado en el salón)
+pip install torch --index-url https://download.pytorch.org/whl/cpu
+pip install sentence-transformers
+echo "sentence-transformers" &gt;&gt; requirements.txt</code></pre>
+<blockquote class="alert">
+<p>Instala esto <strong>antes del taller</strong>, no en vivo: entre <code>torch</code> y el modelo
+son ~300-400MB — rápido con una conexión normal, pero lento (o
+saturante) si 20-30 personas lo descargan a la vez sobre el WiFi del
+salón.</p>
+</blockquote>
 </section>
 <section class="level2" id="configura-el-proveedor-de-embeddings">
 <h2>3.3 Configura el proveedor de embeddings</h2>
 <p>Igual que con <code>LLM_PROVIDER</code>, el <em>de dónde salen los embeddings</em> es
 configuración, no código. Agrega a <code>backend/.env.example</code> (y a tu <code>.env</code>):</p>
-<pre><button class="copy-btn">Copiar</button><code># Elegir proveedor de embeddings: openai | gemini | vllm
+<pre><button class="copy-btn">Copiar</button><code># Elegir proveedor de embeddings: local | openai | gemini | vllm
 # (Groq no ofrece un endpoint de embeddings — no es una opción aquí)
-EMBEDDING_PROVIDER=openai
-EMBEDDING_BASE_URL=https://api.openai.com/v1
-EMBEDDING_API_KEY=
-EMBEDDING_MODEL=text-embedding-3-small
-EMBEDDING_DIM=1536
 
-# --- Gemini (Google AI Studio) — GRATIS, sin tarjeta. Clave en
-# https://aistudio.google.com/apikey (solo cuenta de Google) ---
+# --- local (sentence-transformers) — 100% GRATIS, sin cuenta, sin API
+# key, corre en tu máquina (ver 3.2 para instalarlo) ---
+EMBEDDING_PROVIDER=local
+EMBEDDING_MODEL=all-MiniLM-L6-v2
+
+# --- OpenAI (de pago desde el primer embedding) ---
+# EMBEDDING_PROVIDER=openai
+# EMBEDDING_BASE_URL=https://api.openai.com/v1
+# EMBEDDING_API_KEY=
+# EMBEDDING_MODEL=text-embedding-3-small
+# EMBEDDING_DIM=1536
+
+# --- Gemini (Google AI Studio) — "gratis" en el papel, pero en la
+# práctica algunas cuentas/proyectos de Google Cloud piden activar
+# facturación (prepago) incluso dentro del free tier. Clave en
+# https://aistudio.google.com/apikey ---
 # EMBEDDING_PROVIDER=gemini
 # EMBEDDING_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai
 # EMBEDDING_API_KEY=
@@ -374,19 +397,19 @@ EMBEDDING_DIM=1536
 # EMBEDDING_MODEL=BAAI/bge-m3
 # EMBEDDING_DIM=1024</code></pre>
 <blockquote class="alert">
-<p>Si en el Módulo 00 elegiste <strong>Groq</strong> o <strong>vLLM</strong> para el chat, necesitas
-igual una clave para este endpoint de embeddings (Groq no los ofrece). La
-opción sin costo y sin tarjeta es <strong>Gemini</strong>: crea una clave gratis en
-<a href="https://aistudio.google.com/apikey">Google AI Studio</a> (tope diario en el
-free tier, pero de sobra para el taller) y usa el bloque de arriba — el
-endpoint <code>.../v1beta/openai</code> es la capa de compatibilidad con OpenAI que
-expone Google, así que reutiliza el mismo adaptador de abajo, con un
-ajuste pequeño de código (ver 3.4). Otras alternativas dedicadas a
-embeddings con capa gratuita: Voyage AI (mejor calidad, pero el registro
-pasa por una cuenta de MongoDB Atlas) o Jina AI (registro directo, cuota
-más chica) — ambas requieren su propia clase de embeddings en
-<code>lancedb.embeddings</code>, distinta a la de abajo; no se cubren en este módulo
-por tiempo.</p>
+<p><strong><code>local</code> es la opción por defecto y la única sin ninguna sorpresa de
+facturación</strong> — corre en tu CPU, sin API key. Las otras tres son
+alternativas si quieres probar un servicio real: OpenAI cobra desde el
+primer embedding; Gemini se anuncia como gratis pero <strong>en la práctica
+algunas cuentas de Google Cloud piden facturación igual</strong> (nos pasó
+probando este módulo: el primer <code>POST /documents</code> devolvió <code>Error code:
+402 — Your prepayment credits are depleted</code>, sin haber superado ningún
+límite del free tier) — si te pasa eso, vuelve a <code>local</code> en vez de
+perder tiempo con la facturación de Google; vLLM requiere un segundo
+servidor local con GPU. Otras alternativas dedicadas a embeddings con
+capa gratuita y soporte nativo en <code>lancedb.embeddings</code> (no cubiertas en
+este módulo por tiempo): Voyage AI (el registro pasa por una cuenta de
+MongoDB Atlas) y Jina AI (registro directo, cuota más chica).</p>
 </blockquote>
 <p>Amplía <code>backend/app/config.py</code> (agrega los campos nuevos a <code>Settings</code> y a
 <code>get_settings</code>):</p>
@@ -409,20 +432,22 @@ def get_settings() -&gt; Settings:
         llm_base_url=os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1"),
         llm_api_key=os.getenv("LLM_API_KEY", ""),
         llm_model=os.getenv("LLM_MODEL", "openai/gpt-oss-20b"),
-        embedding_provider=os.getenv("EMBEDDING_PROVIDER", "openai"),
+        embedding_provider=os.getenv("EMBEDDING_PROVIDER", "local"),
         embedding_base_url=os.getenv("EMBEDDING_BASE_URL", "https://api.openai.com/v1"),
         embedding_api_key=os.getenv("EMBEDDING_API_KEY", ""),
-        embedding_model=os.getenv("EMBEDDING_MODEL", "text-embedding-3-small"),
-        embedding_dim=int(os.getenv("EMBEDDING_DIM", "1536")),
+        embedding_model=os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2"),
+        embedding_dim=int(os.getenv("EMBEDDING_DIM", "384")),
     )</code></pre>
 </section>
 <section class="level2" id="el-adaptador-de-embeddings-backendappembeddings.py">
 <h2>3.4 El adaptador de embeddings: <code>backend/app/embeddings.py</code></h2>
-<p>Esta es la única pieza “manual”: una función de embeddings que LanceDB va
-a usar automáticamente. Llama a cualquier endpoint compatible con OpenAI
-— igual que <code>llm_client.py</code>, pero para <code>/embeddings</code> en vez de
-<code>/chat/completions</code> — por eso sirve tanto para OpenAI como para Gemini (vía
-su capa de compatibilidad) o para un modelo de embeddings servido con vLLM.</p>
+<p>Por defecto (<code>EMBEDDING_PROVIDER=local</code>) usamos la función
+<code>sentence-transformers</code> que <strong>ya trae LanceDB incluida</strong> — ni siquiera
+hace falta escribir una clase propia, LanceDB descarga y corre el modelo
+por ti. La clase manual de abajo (<code>OpenAICompatibleEmbeddings</code>) solo entra
+en juego si cambias a <code>openai</code>, <code>gemini</code> o <code>vllm</code>: llama a cualquier
+endpoint compatible con OpenAI — igual que <code>llm_client.py</code>, pero para
+<code>/embeddings</code> en vez de <code>/chat/completions</code>.</p>
 <pre class="python"><button class="copy-btn">Copiar</button><code class="python">from typing import List, Union
 
 from lancedb.embeddings import TextEmbeddingFunction, register
@@ -458,6 +483,14 @@ def get_embedding_function():
     settings = get_settings()
     registry = get_registry()
 
+    if settings.embedding_provider == "local":
+        # sentence-transformers: corre en esta máquina, sin API key ni
+        # costo. Es la función nativa de LanceDB, no la de arriba.
+        return registry.get("sentence-transformers").create(
+            name=settings.embedding_model,
+            device="cpu",
+        )
+
     return registry.get("openai_compatible_embeddings").create(
         name=settings.embedding_model,
         base_url=settings.embedding_base_url,
@@ -465,15 +498,17 @@ def get_embedding_function():
         dim=settings.embedding_dim,
         send_dimensions=settings.embedding_provider == "gemini",
     )</code></pre>
-<p>El único cambio real de código es <code>send_dimensions</code>. <code>gemini-embedding-001</code>
-devuelve por defecto un vector de 3072 posiciones — si no le pedimos
-explícitamente que lo recorte (parámetro <code>dimensions</code>, el mismo que usa la
-API de OpenAI desde sus modelos v3), el vector que llega no coincidiría con
-el <code>EMBEDDING_DIM</code> que declaraste, y <code>search()</code> fallaría al compararlo
-contra la columna <code>vector</code> de la tabla. Por eso el flag es condicional:
-<code>text-embedding-3-small</code> (OpenAI) ya devuelve 1536 por defecto y un
-servidor vLLM típico no espera (y puede rechazar) ese parámetro, así que
-solo se envía cuando el proveedor es Gemini.</p>
+<p>Dos cosas nuevas en el código, ambas pequeñas: la rama <code>if ... == "local"</code>
+(que ni siquiera instancia la clase manual — usa la función nativa de
+LanceDB) y <code>send_dimensions</code>. Esto último es solo para Gemini:
+<code>gemini-embedding-001</code> devuelve por defecto un vector de 3072 posiciones —
+si no le pedimos explícitamente que lo recorte (parámetro <code>dimensions</code>, el
+mismo que usa la API de OpenAI desde sus modelos v3), el vector que llega
+no coincidiría con el <code>EMBEDDING_DIM</code> que declaraste, y <code>search()</code>
+fallaría al compararlo contra la columna <code>vector</code> de la tabla. Por eso el
+flag es condicional: <code>text-embedding-3-small</code> (OpenAI) ya devuelve 1536
+por defecto y un servidor vLLM típico no espera (y puede rechazar) ese
+parámetro, así que solo se envía cuando el proveedor es Gemini.</p>
 <blockquote class="alert">
 <p>Si ya cargaste documentos con otro <code>EMBEDDING_DIM</code> y cambias de
 proveedor, borra <code>./storage/lancedb</code> antes de probar: el esquema de la
@@ -600,9 +635,13 @@ lo que demuestra que es búsqueda semántica y no por palabra clave):</p>
   -d '{"message": "¿Cuántos días de descanso remunerado tengo por año?", "history": []}' \
   | python3 -m json.tool</code></pre>
 <blockquote class="alert">
-<p>Verifica la conexión de <code>EMBEDDING_PROVIDER</code> con una llamada de prueba
-antes del evento — sin ella no hay forma de probar que los sinónimos
-realmente encuentran el documento correcto.</p>
+<p>Si usas <code>local</code> (por defecto), prueba esto <strong>antes del evento</strong> solo para
+que la primera descarga del modelo (~90MB desde Hugging Face) no pase en
+vivo — después corre offline. Si usas <code>openai</code>, <code>gemini</code> o <code>vllm</code>,
+verifica la conexión con una llamada de prueba antes del evento — sin
+ella no hay forma de confirmar que los sinónimos realmente encuentran el
+documento correcto (y, como vimos con Gemini, tampoco de descartar un
+problema de facturación a tiempo).</p>
 </blockquote>
 <section class="level3" id="pruébalo-también-en-el-frontend">
 <h3>Pruébalo también en el frontend</h3>
