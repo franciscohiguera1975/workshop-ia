@@ -5,66 +5,262 @@
   },
   "item": [
     {
-      "name": "0 — Health",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": { "raw": "http://localhost:8000/health", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["health"] }
-      }
+      "name": "01 — Chat simple",
+      "item": [
+        {
+          "name": "§1.3 — Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "http://localhost:8000/health", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["health"] }
+          }
+        },
+        {
+          "name": "§1.7 — Chat simple",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Explícame qué es una API en una frase\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§1.10 — Memoria (1/2): le decimos el nombre",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Me llamo Ana. Recuérdalo.\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "El backend es stateless: copia el \"reply\" de esta respuesta y pégalo en el history del siguiente request."
+          }
+        },
+        {
+          "name": "§1.10 — Memoria (2/2): pregunta por el nombre",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cómo me llamo?\",\n  \"history\": [\n    {\"role\": \"user\", \"content\": \"Me llamo Ana. Recuérdalo.\"},\n    {\"role\": \"assistant\", \"content\": \"PEGA_AQUI_LA_RESPUESTA_ANTERIOR\"}\n  ]\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "Reemplaza PEGA_AQUI_LA_RESPUESTA_ANTERIOR por el \"reply\" real del request anterior antes de enviar."
+          }
+        }
+      ]
     },
     {
-      "name": "0 — Chat simple",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Hola, ¿qué puedes hacer?\",\n  \"history\": []\n}" },
-        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
-      }
+      "name": "02 — Skills",
+      "item": [
+        {
+          "name": "§2.4 — Sin skill (skill_used: null)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Qué día es hoy?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§2.4 — Skill: resumen",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§2.4 — Skill: traductor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Traduce esto al inglés: Hola, ¿cómo estás?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§2.4 — Skill: code-review",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Revisa este código: def suma(a, b): return a+b\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        }
+      ]
     },
     {
-      "name": "1 — Chat con Skill (resumen)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Resume esto: FastAPI es un framework web de Python moderno, rápido, basado en type hints, que genera documentación OpenAPI automáticamente.\",\n  \"history\": []\n}" },
-        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
-      }
+      "name": "03 — RAG",
+      "item": [
+        {
+          "name": "§3.8 — Agregar documento (vacaciones)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Política de vacaciones\",\n  \"text\": \"Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años.\"\n}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.8 — Preguntar usando sinónimos (/chat)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuántos días de descanso remunerado tengo por año?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§3.8 — Consultar la base vectorial directo (/search)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/search?q=¿Cuántos días de descanso remunerado tengo por año?",
+              "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["search"],
+              "query": [{ "key": "q", "value": "¿Cuántos días de descanso remunerado tengo por año?" }]
+            },
+            "description": "Pasa por LanceDB, no por el LLM — sirve para aislar si un problema viene de los embeddings/retrieval o del modelo."
+          }
+        },
+        {
+          "name": "(bonus) Listar documentos cargados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Cargar documento largo (sin trocear)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Manual del empleado (completo)\",\n  \"text\": \"Horario: la jornada es de 8:00 a 17:00 con una hora de almuerzo. Vacaciones: los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años. Teletrabajo: se permite hasta 3 días a la semana con aprobación del jefe directo. Viáticos: se reembolsan contra factura, hasta 30 días después del viaje.\"\n}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Preguntar por viáticos (1/2, documento sin trocear)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Hasta cuándo tengo para presentar mis facturas de viaje?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§3.10 — Mismo contenido en 4 fragmentos (1/4 — Horario)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"title\": \"Manual — Horario\", \"text\": \"La jornada es de 8:00 a 17:00 con una hora de almuerzo.\"}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Mismo contenido en 4 fragmentos (2/4 — Vacaciones)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"title\": \"Manual — Vacaciones\", \"text\": \"Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años.\"}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Mismo contenido en 4 fragmentos (3/4 — Teletrabajo)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"title\": \"Manual — Teletrabajo\", \"text\": \"Se permite teletrabajo hasta 3 días a la semana con aprobación del jefe directo.\"}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Mismo contenido en 4 fragmentos (4/4 — Viáticos)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"title\": \"Manual — Viáticos\", \"text\": \"Los viáticos se reembolsan contra factura, hasta 30 días después del viaje.\"}" },
+            "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
+          }
+        },
+        {
+          "name": "§3.10 — Preguntar por viáticos (2/2, comparar \"sources\")",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Hasta cuándo tengo para presentar mis facturas de viaje?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "Misma pregunta que el request anterior a este bloque — compara el campo \"sources\" ahora que el contenido está en 4 fragmentos en vez de 1 documento largo."
+          }
+        }
+      ]
     },
     {
-      "name": "2a — RAG: agregar documento",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"title\": \"Política de vacaciones\",\n  \"text\": \"Los empleados tienen derecho a 15 días hábiles de vacaciones al año, acumulables hasta por 2 años.\"\n}" },
-        "url": { "raw": "http://localhost:8000/documents", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["documents"] }
-      }
+      "name": "04 — Agentes de IA",
+      "item": [
+        {
+          "name": "§4.6 — Calculadora",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuánto es 123 * 47 + 8?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§4.6 — Clima real (Open-Meteo)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Qué clima hace ahora mismo en Quito?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        },
+        {
+          "name": "§4.6 — Correo real (Gmail) — opcional, requiere credenciales",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Envíame un correo a tu-correo@gmail.com con asunto Prueba y cuerpo Esto salió del agente del taller\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "Reemplaza tu-correo@gmail.com por tu propio correo antes de enviar — va a llegar de verdad. Necesita las credenciales de Gmail del §4.2.c / apéndice."
+          }
+        },
+        {
+          "name": "§4.8 — Ejercicio 2: dos herramientas en el mismo mensaje",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuánto es 15 * 15 y qué clima hace en Cuenca?\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
+          }
+        }
+      ]
     },
     {
-      "name": "2b — RAG: preguntar sobre el documento",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuántos días de vacaciones tengo al año?\",\n  \"history\": []\n}" },
-        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
-      }
-    },
-    {
-      "name": "3 — Agente con herramienta (calculadora)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"message\": \"¿Cuánto es 123 * 47 + 8?\",\n  \"history\": []\n}" },
-        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
-      }
-    },
-    {
-      "name": "4 — Agente + MCP (buscar documentos)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": { "mode": "raw", "raw": "{\n  \"message\": \"Busca en los documentos cuántos días de vacaciones hay\",\n  \"history\": []\n}" },
-        "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] }
-      }
+      "name": "05 — MCP",
+      "item": [
+        {
+          "name": "§5.6 — Buscar documentos vía MCP",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Busca en los documentos cuántos días de vacaciones hay\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "Necesita el documento de vacaciones del Módulo 03 ya cargado con POST /documents."
+          }
+        },
+        {
+          "name": "§5.6 — Agregar fila a Google Sheet — opcional, requiere cuenta de servicio",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Agrega una fila a la hoja TU_SPREADSHEET_ID con los valores Ana y Aprobado\",\n  \"history\": []\n}" },
+            "url": { "raw": "http://localhost:8000/chat", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["chat"] },
+            "description": "Reemplaza TU_SPREADSHEET_ID por el ID real de tu hoja (está en la URL, entre /d/ y /edit). Necesita la cuenta de servicio de Google del §2 del apéndice de credenciales."
+          }
+        }
+      ]
     }
   ]
 }
