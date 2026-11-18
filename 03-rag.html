@@ -589,7 +589,16 @@ def add_document(doc: DocumentIn):
 
 @router.get("/documents")
 def get_documents():
-    return rag.list_documents()</code></pre>
+    return rag.list_documents()
+
+
+@router.get("/search")
+def search_documents(q: str):
+    return rag.search(q)</code></pre>
+<p><code>/search</code> consulta LanceDB directo — sin pasar por el LLM — para poder
+probar la capa de retrieval sola: si esto devuelve el documento correcto
+con un buen <code>score</code>, cualquier respuesta rara de <code>/chat</code> es culpa del
+modelo o del prompt, no de los embeddings.</p>
 </section>
 <section class="level2" id="usa-rag-dentro-de-chat">
 <h2>3.7 Usa RAG dentro de <code>/chat</code></h2>
@@ -633,6 +642,11 @@ lo que demuestra que es búsqueda semántica y no por palabra clave):</p>
 <pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s http://localhost:8000/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "¿Cuántos días de descanso remunerado tengo por año?", "history": []}' \
+  | python3 -m json.tool</code></pre>
+<p>Consulta la base vectorial <strong>directamente</strong>, sin pasar por el LLM — así
+aíslas si el problema (si lo hay) está en los embeddings o en el modelo:</p>
+<pre class="bash"><button class="copy-btn">Copiar</button><code class="bash">curl -s --get http://localhost:8000/search \
+  --data-urlencode "q=¿Cuántos días de descanso remunerado tengo por año?" \
   | python3 -m json.tool</code></pre>
 <blockquote class="alert">
 <p>Si usas <code>local</code> (por defecto), prueba esto <strong>antes del evento</strong> solo para
